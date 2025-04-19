@@ -1,10 +1,9 @@
 {
-    "build": {
-      "nixpacks": {
-        "buildCommand": "cd reservasvue && npm install && npm run build",
-        "startCommand": "cd reservasvue && npm run preview"
-      }
-    },
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": " npm install && npm run build",
+    "startCommand": " node server.js"
+  },
     "deploy": {
       "startCommand": "vite preview --port $PORT"
     }
