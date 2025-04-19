@@ -12,6 +12,34 @@ export default defineConfig(({ mode }) => {
       vue(),
       vueDevTools(),
     ],
+    // Configuración de resolución de rutas
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '~assets': fileURLToPath(new URL('./src/assets', import.meta.url))
+    }
+  },
+
+  // Configuración para producción
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: false, // Cambiar a true en desarrollo si necesitas debug
+    minify: 'esbuild', // Usa esbuild que viene con Vite
+    assetsInlineLimit: 4096, // 4KB - archivos más pequeños se convierten en base64
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/[name]-[hash].js',
+        manualChunks: {
+          vue: ['vue', 'vue-router', 'pinia'],
+          vendor: ['axios', 'lodash']
+        }
+      }
+    }
+  },
+
     server: {
       cors: true,
       host: true, // Permite conexiones desde la red local
@@ -25,11 +53,6 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ''),
           ws: true
         }
-      }
-    },
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },
     base: env.VITE_BASE_PATH || '/', // Usa la base path del .env
