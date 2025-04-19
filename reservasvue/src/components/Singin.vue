@@ -28,117 +28,116 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { mapActions } from "vuex";
 import { jwtDecode } from "jwt-decode";
-import api from "@/axiosConfig";
+import api from "@/axiosConfig"; // Importa la instancia configurada
 
 export default {
-	data() {
-		return {
-			email: "",
-			password: "",
-			loginError: "",
-			loginPasswordError: "",
-		};
-	},
-	methods: {
-		clearErrors() {
-			this.loginError = "";
-			this.loginPasswordError = "";
-		},
-		...mapActions(["loginUsuario"]),
+  data() {
+    return {
+      email: "",
+      password: "",
+      loginError: "",
+      loginPasswordError: "",
+    };
+  },
+  methods: {
+    clearErrors() {
+      this.loginError = "";
+      this.loginPasswordError = "";
+    },
+    ...mapActions(["loginUsuario"]),
 
-		async handleLogin() {
-			this.clearErrors();
+    async handleLogin() {
+      this.clearErrors();
 
-			if (!this.email) {
-				this.loginError = "El email es obligatorio.";
-				return;
-			}
-			if (!this.password) {
-				this.loginPasswordError = "La contraseña es obligatoria.";
-				return;
-			}
+      if (!this.email) {
+        this.loginError = "El email es obligatorio.";
+        return;
+      }
+      if (!this.password) {
+        this.loginPasswordError = "La contraseña es obligatoria.";
+        return;
+      }
 
-			try {
-				const response = await api.post("/login", {
-					nombre_usuario: this.email,
-					password: this.password,
-				});
+      try {
+        // Usa la instancia de api que ya tiene la URL base configurada
+        const response = await api.post("/login", {
+          nombre_usuario: this.email,
+          password: this.password,
+        });
 
-				if (response.status === 200) {
-					const token = response.data.access_token;
+        if (response.status === 200) {
+          const token = response.data.access_token;
 
-					if (typeof token === "string" && token.trim().length > 0) {
-						localStorage.setItem("token", token);
-						this.loginUsuario(token);
+          if (typeof token === "string" && token.trim().length > 0) {
+            localStorage.setItem("token", token);
+            this.loginUsuario(token);
 
-						// 🔹 Nueva solicitud a /protegido después del login exitoso
-						this.verificarAccesoProtegido();
+            // Verificación de ruta protegida usando la misma instancia
+            await this.verificarAccesoProtegido();
 
-						Swal.fire({
-							icon: "success",
-							title: "¡Bienvenido!",
-							text: "Tu inicio de sesión ha sido exitoso. Redirigiendo...",
-							background: "#e0f7fa",
-							color: "#004d40",
-							showConfirmButton: false,
-							timer: 3000,
-						});
+            Swal.fire({
+              icon: "success",
+              title: "¡Bienvenido!",
+              text: "Tu inicio de sesión ha sido exitoso. Redirigiendo...",
+              background: "#e0f7fa",
+              color: "#004d40",
+              showConfirmButton: false,
+              timer: 3000,
+            });
 
-						setTimeout(() => {
-							if (this.email.endsWith(".ad")) {
-								this.$router.push("/VistaAd");
-							} else {
-								this.$router.push("/index");
-							}
-						}, 1000);
-					} else {
-						this.loginError = "El token proporcionado no es válido.";
-					}
-				}
-			} catch (error) {
-				if (error.response) {
-					if (error.response.status === 401) {
-						this.loginError = "Credenciales incorrectas. Intenta de nuevo.";
-					} else if (error.response.status === 400) {
-						this.loginError = "Solicitud incorrecta. Verifica los datos.";
-					} else {
-						this.loginError = "Error al iniciar sesión. Inténtalo más tarde.";
-					}
-				} else {
-					this.loginError = "No se pudo conectar con el servidor.", error;
-				}
+            setTimeout(() => {
+              if (this.email.endsWith(".ad")) {
+                this.$router.push("/VistaAd");
+              } else {
+                this.$router.push("/index");
+              }
+            }, 1000);
+          } else {
+            this.loginError = "El token proporcionado no es válido.";
+          }
+        }
+      } catch (error) {
+        this.handleLoginError(error);
+      }
+    },
 
-				Swal.fire({
-					icon: "error",
-					title: "Error al iniciar sesión",
-					text: this.loginError,
-					background: "#ffebee",
-					color: "#b71c1c",
-				});
-			}
-		},
+    async verificarAccesoProtegido() {
+      try {
+        // Usa la misma instancia de api que ya tiene la URL base
+        const response = await api.get("/protegido");
+        console.log("✅ Acceso a datos protegidos:", response.data);
+      } catch (error) {
+        console.error("❌ Error al acceder a la ruta protegida:", error);
+        // Opcional: manejar errores de autenticación
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+        }
+      }
+    },
 
-		// 🔹 Nueva función para verificar acceso a ruta protegida
-		async verificarAccesoProtegido() {
-			try {
-				const token = localStorage.getItem("token");
-				if (!token) {
-					console.warn("⚠️ No hay token disponible.");
-					return;
-				}
+    handleLoginError(error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          this.loginError = "Credenciales incorrectas. Intenta de nuevo.";
+        } else if (error.response.status === 400) {
+          this.loginError = "Solicitud incorrecta. Verifica los datos.";
+        } else {
+          this.loginError = "Error al iniciar sesión. Inténtalo más tarde.";
+        }
+      } else {
+        this.loginError = "No se pudo conectar con el servidor.";
+        console.error(error);
+      }
 
-				const response = await axios.get("http://localhost:8000/protegido", {
-					headers: {
-						"Authorization": `Bearer ${token}`,
-					},
-				});
-
-				console.log("✅ Acceso a datos protegidos:", response.data);
-			} catch (error) {
-				console.error("❌ Error al acceder a la ruta protegida:", error);
-			}
-		},
-	},
+      Swal.fire({
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text: this.loginError,
+        background: "#ffebee",
+        color: "#b71c1c",
+      });
+    }
+  }
 };
 </script>
 
