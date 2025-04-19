@@ -8,17 +8,20 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5173;
 
-// Configuración segura para rutas:
-app.use(express.static(path.join(__dirname, 'dist'), {
-  index: false, // Evita conflicto con index.html
-  redirect: false // Desactiva redirecciones automáticas
-}));
+// Configuración especial para evitar el error:
+app.use((req, res, next) => {
+  if (req.url.includes(':')) {
+    return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  }
+  next();
+});
 
-// Ruta universal SIN parámetros dinámicos
+app.use(express.static(path.join(__dirname, 'dist')));
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(port, () => {
-  console.log(`✅ Servidor en http://localhost:${port}`);
+  console.log(`✅ Servidor funcionando en http://localhost:${port}`);
 });
