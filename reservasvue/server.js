@@ -1,18 +1,20 @@
-// server.js
-const express = require('express');
-const path = require('path');
-const app = express();
-const port = process.env.PORT || 5173; // Railway asigna el puerto via variable de entorno
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Sirve archivos estáticos (Vue build)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const port = process.env.PORT || 5173;
+
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Maneja todas las rutas para Vue Router
+// Asegúrate que las rutas no tengan parámetros mal formados
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-// Inicia el servidor
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
