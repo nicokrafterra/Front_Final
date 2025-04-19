@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000", // Asegúrate de cambiar esto según tu API
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000", // Fallback para desarrollo
 });
 
 // Interceptor para incluir el token en todas las solicitudes
