@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Perfil from "../Perfil.vue";
+
 import Reserva from "../Reserva.vue";
 import Platos from "../Platos.vue";
 import Pricipal from "../Pricipal.vue";
@@ -36,11 +36,6 @@ const routes = [
         path: "/index",
         name: "index",
         component: Pricipal
-    },
-    {
-        /*path: "/Perfil",
-        name: "Perfil",
-        component: Perfil*/
     },
     {
         path: "/Reservas",
@@ -180,7 +175,7 @@ const routes = [
     {
         path: "/NequiP",
         name: "nequiP",
-        component: NeqP
+        component: NequiP
     }
     
 ];
