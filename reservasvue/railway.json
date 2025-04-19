@@ -2,7 +2,7 @@
     "build": {
       "nixpacks": {
         "buildCommand": "cd reservasvue && npm install && npm run build",
-        "startCommand": "npm run preview"
+        "startCommand": "cd reservasvue && npm run preview"
       }
     },
     "deploy": {
