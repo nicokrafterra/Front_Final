@@ -1,24 +1,24 @@
-# Usa Node.js 18 (LTS - más estable)
+# Usa la imagen oficial de Node.js
 FROM node:18-alpine3.18
 
-# Directorio de trabajo
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia archivos de dependencias e instálalos
-COPY package*.json ./
-RUN npm install
+# Instala las dependencias de producción primero (maneja el conflicto de path-to-regexp)
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --legacy-peer-deps
 
-# Copia todo el proyecto
+# Copia el resto de los archivos
 COPY . .
 
-# Build de producción de Vite
+# Construye la aplicación
 RUN npm run build
 
-# Instala Express (si no está en package.json)
-RUN npm install express
+# Instala express explícitamente si es necesario
+RUN npm install express --omit=dev --legacy-peer-deps
 
-# Puerto (debe coincidir con server.js)
-EXPOSE 5173
+# Puerto expuesto
+EXPOSE 3000
 
-# Comando de inicio (usa node server.js)
+# Comando para ejecutar la aplicación
 CMD ["node", "server.js"]
