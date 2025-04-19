@@ -1,6 +1,6 @@
 <template>
 	<button class="back-button" @click="volver">
-		<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
+		<img src="@/assets/IMG/arrow-left.svg" alt="Volver" />
 	</button>
 	<nav class="planes-container">
 		<h2>Gestión de Planes</h2>

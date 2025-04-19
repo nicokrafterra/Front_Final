@@ -17,7 +17,7 @@ const store = useStore(); // Acceso al store de Vuex
 const router = useRouter(); // Acceso al router de Vue
 const token = ref(localStorage.getItem("token")); // Obtiene el token del localStorage
 const usuario = computed(() => store.state.usuario); // Obtiene el usuario del store
-const imagenPorDefecto = ref("../assets/IMG/foto.png"); // Ruta de la imagen de perfil por defecto
+const imagenPorDefecto = ref("@/assets/IMG/foto.png"); // Ruta de la imagen de perfil por defecto
 //---------------------------------------------------------------------------------------------------------------
 // Propiedad computada para obtener la URL de la imagen del store
 
@@ -129,14 +129,14 @@ onBeforeUnmount(() => {
 <template>
 	<header>
 		<div class="A-logo scroll-animate">
-			<img src="../assets/IMG/LogoFinal.png" alt="">
+			<img src="@/assets/IMG/LogoFinal.png" alt="">
 		</div>
 		<span class="navegar__Usuario">
 			<router-link class="icon-p scroll-animate scroll-delay-1" :to="token ? '/pqr' : '/Iniciar'">
-				<img class="icon" src="../assets/IMG/message.svg" alt="Mensaje" />
+				<img class="icon" src="@/assets/IMG/message.svg" alt="Mensaje" />
 			</router-link>
 			<router-link class="icon-p scroll-animate scroll-delay-2" :to="token ? '/TablaPqrRes' : '/Iniciar'">
-				<img class="icon" src="../assets/IMG/notification.svg" alt="Notificación" />
+				<img class="icon" src="@/assets/IMG/notification.svg" alt="Notificación" />
 			</router-link>
 
 			<!-- Botón de Iniciar sesión si no hay token -->
@@ -163,19 +163,19 @@ onBeforeUnmount(() => {
 			<nav>
 				<ul>
 					<router-link class="ramdon" to="/conf">
-						<img src="..//assets/IMG/settings.svg" alt="Ajustes" /> Ajustes
+						<img src="@/assets/IMG/settings.svg" alt="Ajustes" /> Ajustes
 					</router-link>
 				</ul>
 				<hr class="divider" />
 				<ul>
 					<router-link class="ramdon" to="/Reservas">
-						<img src="../assets/IMG/tutorials.svg" alt="Reservas" /> Mis reservas
+						<img src="@/assets/IMG/tutorials.svg" alt="Reservas" /> Mis reservas
 					</router-link>
 				</ul>
 				<hr class="divider" />
 				<ul>
 					<router-link class="ramdon" to="/Iniciar" @click="cerrarSesion">
-						<img src="../assets/IMG/logout.svg" alt="Log Out" /> Salir
+						<img src="@/assets/IMG/logout.svg" alt="Log Out" /> Salir
 					</router-link>
 				</ul>
 			</nav>
@@ -200,7 +200,7 @@ onBeforeUnmount(() => {
 			<div class="container-categories">
 				<!-- Tarjeta 1: Camping -->
 				<div class="card-category category-moca scroll-animate scroll-delay-1">
-					<img class="Img-PrimerCard" src="../assets/IMG/campfire-896196_1280.jpg" alt="">
+					<img class="Img-PrimerCard" src="@/assets/IMG/campfire-896196_1280.jpg" alt="">
 					<p>Camping a campo abierto</p>
 					<router-link v-if="token" to="Camping"><span>Ver más</span></router-link>
 					<button v-else class="login-button" @click="redirigirALogin">Inicia sesión para ver más</button>
@@ -208,7 +208,7 @@ onBeforeUnmount(() => {
 
 				<!-- Tarjeta 2: Recorrido guiado -->
 				<div class="card-category category-moca scroll-animate scroll-delay-2">
-					<img class="Img-PrimerCard" src="..\assets\IMG\bike-2388449_1280.jpg" alt="">
+					<img class="Img-PrimerCard" src="@/assets\IMG\bike-2388449_1280.jpg" alt="">
 					<p>Recorrido guiado</p>
 					<router-link v-if="token" to="Recorrido"><span>Ver más</span></router-link>
 					<button v-else class="login-button" @click="redirigirALogin">Inicia sesión para ver más</button>
@@ -216,7 +216,7 @@ onBeforeUnmount(() => {
 
 				<!-- Tarjeta 3: Reserva lugares para eventos -->
 				<div class="card-category category-moca scroll-animate scroll-delay-3">
-					<img class="Img-PrimerCard" src="..\assets/IMG/Eventossss.jpg" alt="">
+					<img class="Img-PrimerCard" src="@/assets/IMG/Eventossss.jpg" alt="">
 					<p>Reserva lugares para eventos</p>
 					<router-link v-if="token" to="/Eventos"><span>Ver más</span></router-link>
 					<button v-else class="login-button" @click="redirigirALogin">Inicia sesión para ver más</button>
@@ -224,7 +224,7 @@ onBeforeUnmount(() => {
 
 				<!-- Tarjeta 4: Reserva de Mesas -->
 				<div class="card-category category-moca scroll-animate scroll-delay-4">
-					<img class="Img-PrimerCard" src="..\assets\IMG\event-6927353_1280.jpg" alt="">
+					<img class="Img-PrimerCard" src="@/assets\IMG\event-6927353_1280.jpg" alt="">
 					<p>Reserva de Mesas</p>
 					<router-link v-if="token" to="/Mesas"><span>Ver más</span></router-link>
 					<button v-else class="login-button" @click="redirigirALogin">Inicia sesión para ver más</button>
@@ -239,7 +239,7 @@ onBeforeUnmount(() => {
 				<!-- Producto 1 -->
 				<div class="card-product scroll-animate scroll-delay-1">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/Currasco.png" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/Currasco.png" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -252,7 +252,7 @@ onBeforeUnmount(() => {
 				<!-- Producto 2 -->
 				<div class="card-product scroll-animate scroll-delay-2">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/Pechuga.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/Pechuga.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -266,7 +266,7 @@ onBeforeUnmount(() => {
 				<!-- Producto 3 -->
 				<div class="card-product scroll-animate scroll-delay-3">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/Fetuchino.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/Fetuchino.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -279,7 +279,7 @@ onBeforeUnmount(() => {
 				<!-- Producto 4 -->
 				<div class="card-product scroll-animate scroll-delay-4">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/Picada.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/Picada.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -298,7 +298,7 @@ onBeforeUnmount(() => {
 				<!-- Producto 1 -->
 				<div class="card-product scroll-animate scroll-delay-1">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/Bagre.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/Bagre.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -311,7 +311,7 @@ onBeforeUnmount(() => {
 				<!-- Producto 2 -->
 				<div class="card-product scroll-animate scroll-delay-2">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/Lengua.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/Lengua.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -324,7 +324,7 @@ onBeforeUnmount(() => {
 				<!--  -->
 				<div class="card-product scroll-animate scroll-delay-3">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/PuntaAnca.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/PuntaAnca.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
 				<!--  -->
 				<div class="card-product scroll-animate scroll-delay-4">
 					<div class="container-img">
-						<img class="IMG-Platos" src="../assets/IMG/MOjarraDiabla.jpg" alt="">
+						<img class="IMG-Platos" src="@/assets/IMG/MOjarraDiabla.jpg" alt="">
 						<div class="button-group">
 						</div>
 					</div>
@@ -368,7 +368,7 @@ onBeforeUnmount(() => {
 							impecable
 							y los sabores extraordinarios."</p>
 						<div class="testimonial-author">
-							<img src="../assets/IMG/profile.svg" alt="Cliente 1" class="testimonial-img">
+							<img src="@/assets/IMG/profile.svg" alt="Cliente 1" class="testimonial-img">
 							<div>
 								<h4>Ana Martínez</h4>
 								<p class="testimonial-location">Bogotá, Colombia</p>
@@ -388,7 +388,7 @@ onBeforeUnmount(() => {
 						<p class="testimonial-text">"Celebramos nuestro aniversario aquí y fue mágico. El ambiente, la
 							comida y la atención perfectos."</p>
 						<div class="testimonial-author">
-							<img src="../assets/IMG/profile.svg" alt="Cliente 2" class="testimonial-img">
+							<img src="@/assets/IMG/profile.svg" alt="Cliente 2" class="testimonial-img">
 							<div>
 								<h4>Juan Rodríguez</h4>
 								<p class="testimonial-location">Medellín, Colombia</p>
@@ -409,7 +409,7 @@ onBeforeUnmount(() => {
 							deberían
 							vivir al menos una vez."</p>
 						<div class="testimonial-author">
-							<img src="../assets/IMG/profile.svg" alt="Cliente 3" class="testimonial-img">
+							<img src="@/assets/IMG/profile.svg" alt="Cliente 3" class="testimonial-img">
 							<div>
 								<h4>Laura Gómez</h4>
 								<p class="testimonial-location">Cali, Colombia</p>
@@ -427,37 +427,37 @@ onBeforeUnmount(() => {
 				<p class="instagram-subtitle scroll-animate scroll-delay-1">@RestauranteNombre</p>
 				<div class="gallery-grid">
 					<div class="gallery-item scroll-animate scroll-delay-1">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 1">
+						<img src="@/assets/IMG/profile.svg" alt="Instagram 1">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-2">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 2">
+						<img src="@/assets/IMG/profile.svg" alt="Instagram 2">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-3">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 3">
+						<img src="@/assets/IMG/profile.svg" alt="Instagram 3">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-1">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 4">
+						<img src="@/assets/IMG/profile.svg" alt="Instagram 4">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-2">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 5">
+						<img src="@/assets/IMG/profile.svg" alt="Instagram 5">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-3">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 6">
+						<img src="@/assets/IMG/profile.svg" alt="Instagram 6">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
@@ -546,7 +546,7 @@ onBeforeUnmount(() => {
 					<!-- Artículo 1 -->
 					<article class="blog-card scroll-animate scroll-delay-1">
 						<div class="blog-img-container">
-							<img src="../assets/IMG/call-of-sea-game.jpg" alt="Blog 1" class="blog-img">
+							<img src="@/assets/IMG/call-of-sea-game.jpg" alt="Blog 1" class="blog-img">
 							<div class="blog-date">
 								<span>12</span>
 								<span>MAY</span>
@@ -563,7 +563,7 @@ onBeforeUnmount(() => {
 					<!-- Artículo 2 -->
 					<article class="blog-card scroll-animate scroll-delay-2">
 						<div class="blog-img-container">
-							<img src="../assets/IMG/call-of-sea-game.jpg" alt="Blog 2" class="blog-img">
+							<img src="@/assets/IMG/call-of-sea-game.jpg" alt="Blog 2" class="blog-img">
 							<div class="blog-date">
 								<span>28</span>
 								<span>ABR</span>
@@ -581,7 +581,7 @@ onBeforeUnmount(() => {
 					<!-- Artículo 3 -->
 					<article class="blog-card scroll-animate scroll-delay-3">
 						<div class="blog-img-container">
-							<img src="../assets/IMG/call-of-sea-game.jpg" alt="Blog 3" class="blog-img">
+							<img src="@/assets/IMG/call-of-sea-game.jpg" alt="Blog 3" class="blog-img">
 							<div class="blog-date">
 								<span>15</span>
 								<span>ABR</span>
@@ -623,7 +623,7 @@ onBeforeUnmount(() => {
 
 			<!-- Destacado secundario 1 -->
 			<div class="featured-card secondary-featured scroll-animate scroll-delay-1">
-				<img src="../assets/IMG/Picada.jpg" alt="Especial del Chef" class="featured-image">
+				<img src="@/assets/IMG/Picada.jpg" alt="Especial del Chef" class="featured-image">
 				<div class="featured-content">
 					<h3 class="scroll-animate scroll-delay-2">Especial del Chef</h3>
 					<p class="scroll-animate scroll-delay-3">Descubre nuestra selección exclusiva creada por nuestro
@@ -647,7 +647,7 @@ onBeforeUnmount(() => {
 					<button v-else class="featured-button-small scroll-animate scroll-delay-3"
 						@click="redirigirALogin">INICIA SESIÓN</button>
 				</div>
-				<img src="../assets/IMG/Eventossss.jpg" alt="Eventos Especiales" class="featured-image">
+				<img src="@/assets/IMG/Eventossss.jpg" alt="Eventos Especiales" class="featured-image">
 			</div>
 
 			<!-- Destacado terciario -->
@@ -672,19 +672,19 @@ onBeforeUnmount(() => {
 					<h3 class="footer-title">Contacto</h3>
 					<ul class="footer-list">
 						<li>
-							<img src="../assets/IMG/help.svg" alt="Ubicación" class="footer-icon">
+							<img src="@/assets/IMG/help.svg" alt="Ubicación" class="footer-icon">
 							Kilómetro 12 Vía a La Mesa, Cundinamarca
 						</li>
 						<li>
-							<img src="../assets/IMG/message.svg" alt="Teléfono" class="footer-icon">
+							<img src="@/assets/IMG/message.svg" alt="Teléfono" class="footer-icon">
 							+57 313-430-9651
 						</li>
 						<li>
-							<img src="../assets/IMG/message.svg" alt="Email" class="footer-icon">
+							<img src="@/assets/IMG/message.svg" alt="Email" class="footer-icon">
 							Reservas@support.com
 						</li>
 						<li>
-							<img src="../assets/IMG/logout.svg" alt="Horario" class="footer-icon">
+							<img src="@/assets/IMG/logout.svg" alt="Horario" class="footer-icon">
 							Lunes a Domingo: 11:00 AM - 10:00 PM
 						</li>
 					</ul>
@@ -712,10 +712,10 @@ onBeforeUnmount(() => {
 						<button type="submit">Suscribirse</button>
 					</form>
 					<div class="social-links">
-						<a href="#"><img src="../assets/IMG/icons8-facebook.svg" alt="Facebook"></a>
-						<a href="#"><img src="../assets/IMG/icons8-instagram.svg" alt="Instagram"></a>
-						<a href="#"><img src="../assets/IMG/icons8-twitterx.svg" alt="Twitter"></a>
-						<a href="#"><img src="../assets/IMG/icons8-whatsapp.svg" alt="TripAdvisor"></a>
+						<a href="#"><img src="@/assets/IMG/icons8-facebook.svg" alt="Facebook"></a>
+						<a href="#"><img src="@/assets/IMG/icons8-instagram.svg" alt="Instagram"></a>
+						<a href="#"><img src="@/assets/IMG/icons8-twitterx.svg" alt="Twitter"></a>
+						<a href="#"><img src="@/assets/IMG/icons8-whatsapp.svg" alt="TripAdvisor"></a>
 					</div>
 				</div>
 			</div>
@@ -1069,7 +1069,7 @@ nav ul {
 
 /* Banner con efecto parallax */
 .banner {
-	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../assets/IMG/hero-bg.jpg');
+	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('@/assets/IMG/hero-bg.jpg');
 	background-size: cover;
 	background-attachment: fixed;
 	background-position: center;
@@ -1269,7 +1269,7 @@ nav ul {
 /* Estilos para la sección de testimonios */
 .testimonials-section {
 	padding: 5rem 0;
-	background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('../assets/IMG/testimonials-bg.jpg');
+	background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('@/assets/IMG/testimonials-bg.jpg');
 	background-size: cover;
 	background-attachment: fixed;
 	color: white;
@@ -1809,7 +1809,7 @@ nav ul {
 .main-featured {
 	grid-column: 1 / span 2;
 	height: 400px;
-	background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../assets/IMG/gourmet-dining.jpg');
+	background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('@/assets/IMG/gourmet-dining.jpg');
 	background-size: cover;
 	background-position: center;
 	display: flex;
@@ -1827,7 +1827,7 @@ nav ul {
 .tertiary-featured {
 	grid-column: 1 / span 2;
 	height: 250px;
-	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/IMG/local-produce.jpg');
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('@/assets/IMG/local-produce.jpg');
 	background-size: cover;
 	background-position: center;
 	display: flex;
@@ -1967,7 +1967,7 @@ nav ul {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: url('../assets/IMG/texture.png');
+	background: url('@/assets/IMG/texture.png');
 	opacity: 0.05;
 	z-index: 0;
 }

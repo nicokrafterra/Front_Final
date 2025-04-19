@@ -174,7 +174,7 @@ export default {
     });
 
     const getImageUrl = (name) => {
-      return new URL(`../assets/${name}`, import.meta.url).href;
+      return new URL(`@/assets/${name}`, import.meta.url).href;
     };
 
     const usuario = computed(() => store.state.usuario || {

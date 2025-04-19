@@ -1,7 +1,7 @@
 <template>
 	<div class="contpri">
 		<button class="back-button" @click="volver" aria-label="Volver a la página anterior">
-			<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
+			<img src="@/assets/IMG/arrow-left.svg" alt="Volver" />
 		</button>
 		<section class="eventos-section">
 			<div class="section-header">

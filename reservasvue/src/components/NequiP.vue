@@ -3,7 +3,7 @@
       <h2 class="title">Escanea el código QR para pagar con <span class="highlight">Nequi</span></h2>
       
       <div class="qr-box">
-        <img src="../assets/IMG/QRCO.jpg" alt="Código QR" class="qr-image" />
+        <img src="@/assets/IMG/QRCO.jpg" alt="Código QR" class="qr-image" />
       </div>
       
       <p class="scan-text">Apunta la cámara de tu celular al QR y sigue los pasos.</p>

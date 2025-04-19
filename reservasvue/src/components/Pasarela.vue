@@ -35,7 +35,7 @@
             
             <div class="input-box">
               <span>Entidades Asociadas :</span>
-              <img src="../assets/IMG/imgcards.jpg" alt="Entidades asociadas" />
+              <img src="@/assets/IMG/imgcards.jpg" alt="Entidades asociadas" />
             </div>
   
             <div class="input-box" :class="{ error: errores.titular }">

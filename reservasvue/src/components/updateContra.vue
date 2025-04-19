@@ -1,6 +1,6 @@
 <template>
 	<button class="back-button" @click="volver">
-		<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
+		<img src="@/assets/IMG/arrow-left.svg" alt="Volver" />
 	</button>
 	<div class="update-form">
 		<h2>Actualizar Contraseña</h2>

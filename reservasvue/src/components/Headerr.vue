@@ -1,7 +1,7 @@
 <template>
 	<header>
 		<div class="A-logo">
-				<img class="LogoFianl" src="../assets/IMG/LogoFinal.png" alt="">
+				<img class="LogoFianl" src="@/assets/IMG/LogoFinal.png" alt="">
 		</div>
 		<span class="navegar__Usuario">
 			<!--<router-link to="#" class="Links">Contactanos</router-link>-->
