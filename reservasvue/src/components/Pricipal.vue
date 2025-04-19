@@ -1069,7 +1069,7 @@ nav ul {
 
 /* Banner con efecto parallax */
 .banner {
-	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('@/assets/IMG/hero-bg.jpg');
+	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('@/assets/IMG/banner.jpg');
 	background-size: cover;
 	background-attachment: fixed;
 	background-position: center;
