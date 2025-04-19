@@ -1069,7 +1069,7 @@ nav ul {
 
 /* Banner con efecto parallax */
 .banner {
-	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('@/assets/IMG/banner.jpg');
+	background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
 	background-size: cover;
 	background-attachment: fixed;
 	background-position: center;
@@ -1269,7 +1269,7 @@ nav ul {
 /* Estilos para la sección de testimonios */
 .testimonials-section {
 	padding: 5rem 0;
-	background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('@/assets/IMG/testimonials-bg.jpg');
+	background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
 	background-size: cover;
 	background-attachment: fixed;
 	color: white;
@@ -1809,7 +1809,7 @@ nav ul {
 .main-featured {
 	grid-column: 1 / span 2;
 	height: 400px;
-	background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('@/assets/IMG/gourmet-dining.jpg');
+	background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
 	background-size: cover;
 	background-position: center;
 	display: flex;
@@ -1827,7 +1827,7 @@ nav ul {
 .tertiary-featured {
 	grid-column: 1 / span 2;
 	height: 250px;
-	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('@/assets/IMG/local-produce.jpg');
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 	background-size: cover;
 	background-position: center;
 	display: flex;
