@@ -429,37 +429,37 @@ onBeforeUnmount(() => {
 				<p class="instagram-subtitle scroll-animate scroll-delay-1">@RestauranteNombre</p>
 				<div class="gallery-grid">
 					<div class="gallery-item scroll-animate scroll-delay-1">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 1">
+						<img src="../assets/IMG/RestauranteInsta.jpg" alt="Instagram 1">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-2">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 2">
+						<img src="../assets/IMG/FotoPlatoInsta.jpg" alt="Instagram 2">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-3">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 3">
+						<img src="../assets/IMG/GenteCampingInsta.jpg" alt="Instagram 3">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-1">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 4">
+						<img src="../assets/IMG/GenteInsta.jpg" alt="Instagram 4">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-2">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 5">
+						<img src="../assets/IMG/GenteSenderoInsta.jpg" alt="Instagram 5">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
 					</div>
 					<div class="gallery-item scroll-animate scroll-delay-3">
-						<img src="../assets/IMG/profile.svg" alt="Instagram 6">
+						<img src="../assets/IMG/SalonInsta.jpg" alt="Instagram 6">
 						<div class="gallery-overlay">
 							<span class="instagram-icon">📷</span>
 						</div>
@@ -548,7 +548,7 @@ onBeforeUnmount(() => {
 					<!-- Artículo 1 -->
 					<article class="blog-card scroll-animate scroll-delay-1">
 						<div class="blog-img-container">
-							<img src="../assets/IMG/call-of-sea-game.jpg" alt="Blog 1" class="blog-img">
+							<img src="../assets/IMG/Marinado.jpg" alt="Blog 1" class="blog-img">
 							<div class="blog-date">
 								<span>12</span>
 								<span>MAY</span>
@@ -565,7 +565,7 @@ onBeforeUnmount(() => {
 					<!-- Artículo 2 -->
 					<article class="blog-card scroll-animate scroll-delay-2">
 						<div class="blog-img-container">
-							<img src="../assets/IMG/call-of-sea-game.jpg" alt="Blog 2" class="blog-img">
+							<img src="../assets/IMG/Vinos.jpg" alt="Blog 2" class="blog-img">
 							<div class="blog-date">
 								<span>28</span>
 								<span>ABR</span>
@@ -583,7 +583,7 @@ onBeforeUnmount(() => {
 					<!-- Artículo 3 -->
 					<article class="blog-card scroll-animate scroll-delay-3">
 						<div class="blog-img-container">
-							<img src="../assets/IMG/call-of-sea-game.jpg" alt="Blog 3" class="blog-img">
+							<img src="../assets/IMG/Sostenible.jpg" alt="Blog 3" class="blog-img">
 							<div class="blog-date">
 								<span>15</span>
 								<span>ABR</span>
@@ -927,6 +927,8 @@ header:hover {
 	background-color: rgba(193, 68, 14, 0.98);
 }
 
+
+
 .A-logo img {
 	height: 100%;
 	width: 100%;
@@ -1142,34 +1144,35 @@ nav ul {
 /* Contenido principal modernizado */
 .main-content {
 	padding: 4rem 0;
-	background-color: #f9f5f0;
+	background-color: #fef7eabf;
 }
 
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 0 1.5rem;
+	padding: 14px;
 }
+
 
 .heading-1 {
 	font-size: 2.5rem;
 	text-align: center;
-	margin-bottom: 3rem;
+	margin-bottom: 2rem;
 	color: var(--text);
 	position: relative;
-	display: inline-block;
-	left: 50%;
-	transform: translateX(-50%);
 }
 
 .heading-1::after {
 	content: '';
-	display: block;
-	width: 80px;
+	position: absolute;
+	width: 50px;
 	height: 4px;
-	background: linear-gradient(to right, var(--primary), var(--accent));
-	margin: 0.8rem auto 0;
+	background-color: var(--accent);
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
 	border-radius: 2px;
+	transition: var(--transition);
 }
 
 /* Estilos para la sección de equipo */
@@ -1422,8 +1425,8 @@ nav ul {
 
 /* Estilos para la sección de eventos */
 .events-section {
-	padding: 4rem 0;
-	background-color: white;
+	padding: 40px;
+	background-color: #f9f5f04f;
 }
 
 .events-container {
@@ -1440,6 +1443,7 @@ nav ul {
 	overflow: hidden;
 	box-shadow: var(--shadow-sm);
 	transition: var(--transition);
+	width: 100%;
 }
 
 .event-card:hover {
@@ -1636,6 +1640,9 @@ nav ul {
 }
 
 /* Tarjetas de categorías modernas */
+
+
+
 .container-categories {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -2300,5 +2307,111 @@ nav ul {
 		flex-direction: column;
 		gap: 0.5rem;
 	}
+}
+
+@media (max-width: 465px) {
+  /* 1. Ajustes generales */
+  body {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  /* 2. Header/Navegación */
+  header {
+    height: 60px;
+    padding: 0 0.5rem;
+  }
+  
+  .navegar__Usuario {
+    gap: 0.5rem;
+  }
+  
+  .perfil {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .Menu-desple {
+    width: 100%;
+    top: 60px;
+    left: 0;
+    right: 0;
+  }
+  
+  /* 3. Banner principal */
+  .banner {
+    padding: 100px 0 60px;
+  }
+
+  .login-button{
+		font-size: 10px;
+  }
+  
+  .content-banner h2 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+  
+  .content-banner p {
+    font-size: 1rem;
+  }
+  
+  /* 4. Títulos */
+  .heading-1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* 5. Grids y layouts */
+  .team-container,
+  .testimonials-container,
+  .blog-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* 6. Eventos */
+  .event-card {
+    padding: 1rem;
+		width: 85%;
+  }
+  
+  .event-date {
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    font-size: 0.9rem;
+  }
+  
+  /* 7. Botones */
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* 8. Ajustes adicionales para móviles pequeños */
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+		
+  }
+  
+  /* 9. Ocultar elementos no esenciales en móvil */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* 10. Menús hamburguesa (si aplica) */
+  .menu-toggle {
+    display: block;
+  }
+  
+  .nav-links {
+    display: none;
+  }
 }
 </style>

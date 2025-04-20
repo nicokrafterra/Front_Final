@@ -165,7 +165,6 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #1f242d;
     padding: 25px;
   }
   
