@@ -104,7 +104,7 @@
   import { computed, ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
-  import api from '@/axiosConfig'; // Cambiado de axios a api
+  import axios from 'axios';
   import Swal from 'sweetalert2';
   import { jwtDecode } from 'jwt-decode';
   
@@ -123,26 +123,19 @@
 	};
   });
   
-const imagenPerfil = computed(() => {
-  const imagen = store.state.usuario?.imagen;
-  
-  // Si no hay imagen o es el valor por defecto
-  if (!imagen || imagen === 'default' || imagen === 'fas fa-user-circle') {
-    return null; // Usaremos el ícono por defecto
-  }
-  
-  // Si ya es una URL completa (http/https o data:image)
-  if (/^https?:\/\//.test(imagen) || imagen.startsWith('data:image')) {
-    return imagen;
-  }
-  
-  // Construir URL desde el backend
-  const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ''); // Eliminar barra final si existe
-  const imagePath = imagen.replace(/^\//, ''); // Eliminar barra inicial si existe
-  
-  return `${baseUrl}/${imagePath}?t=${Date.now()}`; // Cache buster
-});
-
+  const imagenPerfil = computed(() => {
+	const imagen = store.state.usuario?.imagen;
+	
+	if (!imagen) return imagenPorDefecto.value;
+	
+	if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+	  return imagen;
+	}
+	
+	const baseUrl = 'http://localhost:8000';
+	const separador = imagen.startsWith('/') ? '' : '/';
+	return `${baseUrl}${separador}${imagen}?t=${Date.now()}`;
+  });
   
   function obtenerUserId() {
 	const token = localStorage.getItem('token');
@@ -173,8 +166,8 @@ const imagenPerfil = computed(() => {
 	formData.append("file", archivo);
   
 	try {
-	  const response = await api.put(
-		`/usuarios/${userId.value}/actualizar-foto`,
+	  const response = await axios.put(
+		`http://localhost:8000/usuarios/${userId.value}/actualizar-foto`,
 		formData,
 		{
 		  headers: {
@@ -214,7 +207,7 @@ const imagenPerfil = computed(() => {
 	}).then(async (result) => {
 	  if (result.isConfirmed) {
 		try {
-		  await api.delete(`/usuarios/${userId.value}`, { 
+		  await axios.delete(`http://localhost:8000/usuarios/${userId.value}`, {
 			headers: {
 			  Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
@@ -246,17 +239,12 @@ const imagenPerfil = computed(() => {
 	});
   };
   
-  onMounted(async () => {
-  obtenerUserId();
-  if (!store.state.usuario) {
-    await store.dispatch('fetchUsuario');
-  }
-  
-  // Debug: Verifica los datos
-  console.log('Usuario:', store.state.usuario);
-  console.log('Imagen:', store.state.usuario?.imagen);
-  console.log('UserId:', userId.value);
-});
+  onMounted(() => {
+	obtenerUserId();
+	if (!store.state.usuario) {
+	  store.dispatch('fetchUsuario');
+	}
+  });
   </script>
   
   <style scoped>
