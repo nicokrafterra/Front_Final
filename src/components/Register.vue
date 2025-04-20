@@ -57,127 +57,127 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/axiosConfig"; // Cambiado de axios a api
 import Swal from "sweetalert2";
 
 export default {
-	data() {
-		return {
-			nombre: "",
-			apellido: "",
-			email: "",
-			password: "",
-			vpassword: "",
-			numeroCelular: "",
-			nombreError: "",
-			apellidoError: "",
-			emailError: "",
-			passwordError: "",
-			vpasswordError: "",
-			mostrarPassword: false,
-			mostrarVPassword: false,
-			celularError: "",
-		};
-	},
-	methods: {
-		clearErrors() {
-			this.nombreError = "";
-			this.apellidoError = "";
-			this.emailError = "";
-			this.passwordError = "";
-			this.vpasswordError = "";
-			this.celularError = "";
-		},
-		validateNombre(nombre) {
-			const nombreRegex = /^[a-zA-Z\s]+$/;
-			return nombreRegex.test(nombre);
-		},
-		validateEmail(email) {
-			const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-			return emailPattern.test(email);
-		},
-		validatePassword(password) {
-			const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d{3,})(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
-			return passwordRegex.test(password);
-		},
-		validateNumeroCelular(numero) {
-			const numeroRegex = /^[0-9]+$/;
-			return numeroRegex.test(numero) && numero.length >= 10;
-		},
-		async handleRegister() {
-			this.clearErrors();
+  data() {
+    return {
+      nombre: "",
+      apellido: "",
+      email: "",
+      password: "",
+      vpassword: "",
+      numeroCelular: "",
+      nombreError: "",
+      apellidoError: "",
+      emailError: "",
+      passwordError: "",
+      vpasswordError: "",
+      mostrarPassword: false,
+      mostrarVPassword: false,
+      celularError: "",
+    };
+  },
+  methods: {
+    clearErrors() {
+      this.nombreError = "";
+      this.apellidoError = "";
+      this.emailError = "";
+      this.passwordError = "";
+      this.vpasswordError = "";
+      this.celularError = "";
+    },
+    validateNombre(nombre) {
+      const nombreRegex = /^[a-zA-Z\s]+$/;
+      return nombreRegex.test(nombre);
+    },
+    validateEmail(email) {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailPattern.test(email);
+    },
+    validatePassword(password) {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d{3,})(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
+      return passwordRegex.test(password);
+    },
+    validateNumeroCelular(numero) {
+      const numeroRegex = /^[0-9]+$/;
+      return numeroRegex.test(numero) && numero.length >= 10;
+    },
+    async handleRegister() {
+      this.clearErrors();
 
-			let valid = true;
+      let valid = true;
 
-			// Validaciones
-			if (!this.nombre || !this.validateNombre(this.nombre)) {
-				this.nombreError = "El nombre debe contener al menos 2 letras.";
-				valid = false;
-			}
-			if (!this.apellido || !this.validateNombre(this.apellido)) {
-				this.apellidoError = "El apellido debe contener al menos 2 letras.";
-				valid = false;
-			}
-			if (!this.email || !this.validateEmail(this.email)) {
-				this.emailError = "Por favor, introduce un correo electrónico válido.";
-				valid = false;
-			}
-			if (!this.password || !this.validatePassword(this.password)) {
-				this.passwordError =
-					"La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, 3 números y un carácter especial.";
-				valid = false;
-			}
-			if (this.password !== this.vpassword) {
-				this.vpasswordError = "Las contraseñas no coinciden.";
-				valid = false;
-			}
-			if (!this.numeroCelular || !this.validateNumeroCelular(this.numeroCelular)) {
-				this.celularError = "Número de celular inválido (mínimo 10 dígitos).";
-				valid = false;
-			}
+      // Validaciones
+      if (!this.nombre || !this.validateNombre(this.nombre)) {
+        this.nombreError = "El nombre debe contener al menos 2 letras.";
+        valid = false;
+      }
+      if (!this.apellido || !this.validateNombre(this.apellido)) {
+        this.apellidoError = "El apellido debe contener al menos 2 letras.";
+        valid = false;
+      }
+      if (!this.email || !this.validateEmail(this.email)) {
+        this.emailError = "Por favor, introduce un correo electrónico válido.";
+        valid = false;
+      }
+      if (!this.password || !this.validatePassword(this.password)) {
+        this.passwordError =
+          "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, 3 números y un carácter especial.";
+        valid = false;
+      }
+      if (this.password !== this.vpassword) {
+        this.vpasswordError = "Las contraseñas no coinciden.";
+        valid = false;
+      }
+      if (!this.numeroCelular || !this.validateNumeroCelular(this.numeroCelular)) {
+        this.celularError = "Número de celular inválido (mínimo 10 dígitos).";
+        valid = false;
+      }
 
-			if (valid) {
-				try {
-					const response = await axios.post("/usuarios/", {
-						nombre: this.nombre,
-						apellido: this.apellido,
-						correoElectronico: this.email,
-						contraseñaUsuario: this.password,
-						numeroCelular: this.numeroCelular,
-					});
+      if (valid) {
+        try {
+          const response = await api.post("/usuarios/", {
+            nombre: this.nombre,
+            apellido: this.apellido,
+            correoElectronico: this.email,
+            contraseñaUsuario: this.password,
+            numeroCelular: this.numeroCelular,
+          });
 
-					// Guardar el token en localStorage
-					const token = response.data.access_token;
-					localStorage.setItem("token", token);
+          // Guardar el token en localStorage
+          const token = response.data.access_token;
+          localStorage.setItem("token", token);
 
-					Swal.fire({
-						icon: "success",
-						title: "¡Registro exitoso!",
-						text: "Te has registrado correctamente. Redirigiendo...",
-						background: "#e0f7fa",
-						color: "#004d40",
-						showConfirmButton: false,
-						timer: 3000,
-					});
+          Swal.fire({
+            icon: "success",
+            title: "¡Registro exitoso!",
+            text: "Te has registrado correctamente. Redirigiendo...",
+            background: "#e0f7fa",
+            color: "#004d40",
+            showConfirmButton: false,
+            timer: 3000,
+          });
 
-					setTimeout(() => {
-						this.$router.push("/index"); // Redirigir al usuario
-					}, 1000);
-				} catch (error) {
-					if (error.response && error.response.data) {
-						this.emailError = error.response.data.detail || "Error al registrar usuario.";
-					}
-					Swal.fire({
-						icon: "error",
-						title: "Error al registrar",
-						text: "Ocurrió un error al intentar registrar el usuario",
-						background: "#ffebee",
-						color: "#b71c1c",
-					});
-				}
-			}
-		},
-	},
+          setTimeout(() => {
+            this.$router.push("/index"); // Redirigir al usuario
+          }, 1000);
+        } catch (error) {
+          if (error.response && error.response.data) {
+            this.emailError = error.response.data.detail || "Error al registrar usuario.";
+          }
+          Swal.fire({
+            icon: "error",
+            title: "Error al registrar",
+            text: "Ocurrió un error al intentar registrar el usuario",
+            background: "#ffebee",
+            color: "#b71c1c",
+          });
+        }
+      }
+    },
+  },
 };
 </script>
 
