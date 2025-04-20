@@ -141,16 +141,46 @@ const hacerReserva = async () => {
   try {
     const response = await api.post('/reservas/', reservaData);
     
-    if (response.status === 201) {
-      await mostrarExitoReserva();
+    // Verificación más precisa del éxito
+    if (response.status >= 200 && response.status < 300) {
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Reserva exitosa!',
+        text: 'Tu reserva se ha realizado correctamente',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      
       resetearFormulario();
       router.push('/ResVer');
     } else {
-      throw new Error(`Error ${response.status}`);
+      // Manejar códigos de error específicos
+      const errorMsg = response.data?.message || 'Error desconocido al realizar la reserva';
+      throw new Error(errorMsg);
     }
   } catch (error) {
     console.error('Error en reserva:', error);
-    mostrarErrorReserva(error);
+    
+    // Mensaje de error mejorado
+    let errorMessage = 'No se pudo completar la reserva';
+    
+    if (error.response) {
+      // Error de la API
+      errorMessage = error.response.data?.message || errorMessage;
+    } else if (error.request) {
+      // Error de conexión
+      errorMessage = 'No se recibió respuesta del servidor';
+    } else {
+      // Error en el código
+      errorMessage = error.message || errorMessage;
+    }
+    
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: errorMessage,
+      confirmButtonText: 'Entendido'
+    });
   } finally {
     isLoading.value = false;
   }
