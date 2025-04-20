@@ -32,65 +32,100 @@
 </template>
 
 <script>
+import api from '@/axiosConfig';
 import Swal from 'sweetalert2';
+
 export default {
-	data() {
-		return {
-			planes: [],
-		};
-	},
-	methods: {
-		// Método para obtener los planes
-		async obtenerPlanes() {
-			try {
-				const response = await fetch('/planes/');
-				if (response.ok) {
-					this.planes = await response.json();
-				} else {
-					console.error('Error al obtener los planes:', response.status);
-				}
-			} catch (error) {
-				console.error('Error en la solicitud:', error);
-			}
-		},
-		// Método para eliminar un plan por ID
-		async eliminarPlan(id) {
-			try {
-				Swal.fire({
-					title: '¿Estás seguro?',
-					text: 'No podrás deshacer esta acción.',
-					icon: 'warning',
-					showCancelButton: true,
-					confirmButtonColor: '#d33',
-					cancelButtonColor: '#3085d6',
-					confirmButtonText: 'Sí, eliminar',
-					cancelButtonText: 'Cancelar',
-				}).then(async (result) => {
-					if (result.isConfirmed) {
-						const response = await fetch(`/planes/${id}`, {
-							method: 'DELETE',
-						});
-						if (response.ok) {
-							this.planes = this.planes.filter((plan) => plan.id !== id);
-							Swal.fire('¡Eliminado!', 'El plan ha sido eliminado.', 'success');
-						} else {
-							console.error('Error al eliminar el plan:', response.status);
-							Swal.fire('Error', 'No se pudo eliminar el plan.', 'error');
-						}
-					}
-				});
-			} catch (error) {
-				console.error('Error en la solicitud:', error);
-				Swal.fire('Error', 'Ocurrió un problema al eliminar el plan.', 'error');
-			}
-		},
-		volver() {
-			this.$router.back();
-		},
-	},
-	mounted() {
-		this.obtenerPlanes();
-	},
+  data() {
+    return {
+      planes: [],
+      isLoading: false,
+      error: null
+    };
+  },
+
+  methods: {
+    // Método mejorado para obtener los planes
+    async obtenerPlanes() {
+      this.isLoading = true;
+      this.error = null;
+      
+      try {
+        const response = await api.get('/planes/');
+        
+        if (response.status === 200) {
+          this.planes = response.data;
+        } else {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error('Error al obtener los planes:', error);
+        this.error = 'No se pudieron cargar los planes. Por favor, intente nuevamente.';
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: this.error,
+          confirmButtonText: 'Entendido'
+        });
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // Método mejorado para eliminar un plan
+    async eliminarPlan(id) {
+      try {
+        const result = await Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'Esta acción eliminará permanentemente el plan.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar',
+          reverseButtons: true,
+          focusCancel: true
+        });
+
+        if (!result.isConfirmed) return;
+
+        const response = await api.delete(`/planes/${id}`);
+        
+        if (response.status === 200 || response.status === 204) {
+          this.planes = this.planes.filter(plan => plan.id !== id);
+          
+          await Swal.fire({
+            icon: 'success',
+            title: '¡Eliminado!',
+            text: 'El plan ha sido eliminado correctamente.',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        } else {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error('Error al eliminar el plan:', error);
+        
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo eliminar el plan. Por favor, intente nuevamente.',
+          confirmButtonText: 'Entendido'
+        });
+      }
+    },
+
+    volver() {
+      this.$router.go(-1);
+    }
+  },
+
+  mounted() {
+    this.obtenerPlanes();
+  }
 };
 </script>
 
