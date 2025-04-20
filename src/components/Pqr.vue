@@ -73,7 +73,7 @@ const enviarPqr = async () => {
 	};
 
 	try {
-		const response = await fetch('http://localhost:8000/pqr/', {
+		const response = await fetch('/pqr/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

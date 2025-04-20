@@ -22,7 +22,7 @@ const respuesta = ref('');
 
 const enviarRespuesta = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/pqrs/${props.pqr.id}/respuesta`, {
+    const response = await fetch(`/pqrs/${props.pqr.id}/respuesta`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

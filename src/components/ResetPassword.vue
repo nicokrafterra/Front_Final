@@ -13,6 +13,7 @@
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue"; // Importa ref para manejar el estado
+import api from "@/axiosConfig";
 
 export default {
   setup() {
@@ -30,7 +31,7 @@ export default {
 
     console.log("Datos enviados:", datos); // Verifica los datos antes de enviar
 
-    const response = await axios.post("http://localhost:8000/reset-password", datos);
+    const response = await api.post("/reset-password", datos);
     alert("Contraseña restablecida correctamente.");
     router.push("/Iniciar");
   } catch (error) {

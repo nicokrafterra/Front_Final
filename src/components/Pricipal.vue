@@ -33,9 +33,8 @@ const imagenPerfil = computed(() => {
   if (!imagen) return imagenPorDefecto.value;
   
   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-  const separador = imagen.startsWith('/') ? '' : '/';
   
-  return `${baseUrl}${separador}${imagen}?t=${Date.now()}`;
+  return `${baseUrl}/${imagen}?t=${Date.now()}`;
 });
 
 // Observar cambios en el store para la imagen del usuario

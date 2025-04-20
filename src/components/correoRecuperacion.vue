@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import api from '@/axiosConfig';
 import axios from 'axios';
 
 export default {
@@ -26,7 +27,7 @@ export default {
 	methods: {
 		async solicitarRecuperacion() {
 			try {
-				const response = await axios.post('http://localhost:8000/recuperarpassword', { email: this.email });
+				const response = await api.post('/recuperarpassword', { email: this.email });
 				this.mensaje = response.data.message;
 			} catch (error) {
 				this.mensaje = error.response?.data?.detail || "Error al enviar el correo";

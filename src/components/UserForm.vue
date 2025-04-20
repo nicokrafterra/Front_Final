@@ -26,7 +26,8 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import api from '@/axiosConfig';
+import axios from 'axios';
   import Swal from 'sweetalert2'; 
   
   export default {
@@ -50,7 +51,7 @@
 	methods: {
 	  async actualizarUsuario() {
 		try {
-		  await axios.put(`http://127.0.0.1:8000/usuarios/${this.usuario.id}`, this.localUsuario);
+		  await api.put(`/usuarios/${this.usuario.id}`, this.localUsuario);
 		  
 		  Swal.fire({
 			title: 'Éxito!',
@@ -73,7 +74,7 @@
 	  },
 	  async eliminarUsuario() {
 		try {
-		  await axios.delete(`http://127.0.0.1:8000/usuarios/${this.usuario.id}`);
+		  await api.delete(`/usuarios/${this.usuario.id}`);
 		  
 		  Swal.fire({
 			title: 'Éxito!',

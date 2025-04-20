@@ -45,6 +45,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import { jwtDecode } from 'jwt-decode';
+import api from '@/axiosConfig';
 
 const store = useStore();
 const router = useRouter();
@@ -85,7 +86,7 @@ const obtenerReservas = async () => {
 			throw new Error("No se pudo obtener el ID del usuario.");
 		}
 
-		const response = await axios.get(`http://localhost:8000/reservas/${usuarioId.value}/user`, {
+		const response = await api.get(`/reservas/${usuarioId.value}/user`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -100,7 +101,7 @@ const pagarReserva = async (id) => {
 
 		const token = localStorage.getItem('token');
 		if (!token) throw new Error("No hay token disponible, inicia sesión.");
-		const response = await axios.post(`http://localhost:8000/reservas/${id}/pagar`, null, {
+		const response = await api.post(`/reservas/${id}/pagar`, null, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -120,7 +121,7 @@ const eliminarReserva = async (id) => {
 	try {
 		const token = localStorage.getItem('token');
 		if (!token) throw new Error("No hay token disponible, inicia sesión.");
-		const response = await axios.delete(`http://localhost:8000/reservas/${id}`, {
+		const response = await api.delete(`/reservas/${id}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}

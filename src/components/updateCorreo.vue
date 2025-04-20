@@ -20,6 +20,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'vue-router';
+import api from '@/axiosConfig';
 
 const newEmail = ref('');
 const userId = ref(null);
@@ -52,8 +53,8 @@ async function updateEmail() {
 	}
 
 	try {
-		await axios.put(
-			`http://localhost:8000/usuarios/${userId.value}/correo`,
+		await api.put(
+			`/usuarios/${userId.value}/correo`,
 			{ nuevo_correo: newEmail.value },
 			{
 				headers: {

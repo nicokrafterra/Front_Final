@@ -57,6 +57,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import Swal from "sweetalert2";
+import api from "@/axiosConfig";
 
 const nombre = ref("");
 const cantidad_maxima = ref(null);
@@ -81,7 +82,7 @@ const agregarPlan = async () => {
 	loading.value = true;
 
 	try {
-		const response = await axios.post("http://localhost:8000/planes", planData);
+		const response = await api.post("/planes", planData);
 
 		if (!response.ok) {
 			throw new Error("Error al agregar el plan");

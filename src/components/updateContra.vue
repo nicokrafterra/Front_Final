@@ -23,6 +23,7 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 import Swal from 'sweetalert2';
 import { jwtDecode } from 'jwt-decode'; // Importamos la librería para decodificar JWT
+import api from '@/axiosConfig';
 
 export default {
 	data() {
@@ -74,8 +75,8 @@ export default {
 				}
 
 				// Enviar solicitud con el token JWT en los headers
-				const response = await axios.post(
-					`http://localhost:8000/usuarios/${this.userId}/actualizar_contraseña`,
+				const response = await api.post(
+					`/usuarios/${this.userId}/actualizar_contraseña`,
 					{
 						contraseñaActual: this.currentPassword,
 						nuevaContraseña: this.newPassword,

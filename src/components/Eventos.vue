@@ -39,6 +39,7 @@ import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import api from '@/axiosConfig';
 
 const router = useRouter();
 const Lugares = ref([]);
@@ -73,7 +74,7 @@ const volver = () => {
 // Obtener los lugares disponibles para eventos
 const obtenerLugares = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:8000/planes/Evento/tipo");
+    const response = await api.get("/planes/Evento/tipo");
     Lugares.value = response.data;
   } catch (error) {
     console.error("Error al obtener los lugares:", error);

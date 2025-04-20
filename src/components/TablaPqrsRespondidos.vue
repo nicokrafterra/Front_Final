@@ -29,6 +29,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import api from '@/axiosConfig';
 
 const router = useRouter();
 const pqrs = ref([]);
@@ -57,7 +58,7 @@ const obtenerPqrsRespondidos = async () => {
 
 	try {
 		const token = localStorage.getItem('token');
-		const response = await axios.get(`http://localhost:8000/usuarios/${usuarioId.value}/pqrs/respondidos`, {
+		const response = await api.get(`/usuarios/${usuarioId.value}/pqrs/respondidos`, {
 			headers: {
 				Authorization: `Bearer ${token}`, // 🔹 Se incluye el token JWT en la solicitud
 			},

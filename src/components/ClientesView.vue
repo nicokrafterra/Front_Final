@@ -237,7 +237,7 @@ export default {
 			users: [],
 			mostrarFormulario: false,
 			usuarioSeleccionado: null,
-			modoFormulario: 'editar' // o 'eliminar'
+			modoFormulario: 'editar' 
 		};
 	},
 	methods: {
