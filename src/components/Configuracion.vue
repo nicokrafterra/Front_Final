@@ -103,117 +103,169 @@
 import { computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import axios from 'axios';
 import Swal from 'sweetalert2';
+import { jwtDecode } from 'jwt-decode';
 import api from '@/axiosConfig';
 
 const router = useRouter();
 const store = useStore();
 const imagenInput = ref(null);
-
-// Eliminamos userId ref ya que lo obtendremos del store
+const userId = ref(null);
 const imagenPorDefecto = ref('fas fa-user-circle');
 
-// Usuario desde el store con valores por defecto mejorados
 const usuario = computed(() => {
-  return {
-    nombre: store.state.usuario?.nombre || 'Usuario',
-    esAdmin: store.state.usuario?.esAdmin || false,
-    correoElectronico: store.state.usuario?.correoElectronico || 'No especificado',
-    numeroCelular: store.state.usuario?.numeroCelular || 'No especificado',
-    imagen: store.state.usuario?.imagen || null
-  };
+	return store.state.usuario || {
+		nombre: 'Usuario',
+		esAdmin: false,
+		correoElectronico: 'No especificado',
+		numeroCelular: 'No especificado'
+	};
 });
 
-// Imagen de perfil usando el getter del store
 const imagenPerfil = computed(() => {
-  const imagenData = store.getters.imagenPerfil;
-  return imagenData.tipo === 'imagen' ? imagenData.valor : imagenData.valor;
+  const usuarioStore = store.state.usuario;
+  console.log('Datos completos del usuario desde store:', usuarioStore); // Debug completo
+  
+  if (!usuarioStore || !usuarioStore.imagen) {
+    console.log('No hay imagen en el store, usando imagen por defecto');
+    return imagenPorDefecto.value;
+  }
+
+  const imagen = usuarioStore.imagen;
+  console.log('Imagen del store:', imagen); // Debug específico
+
+  // Si ya es una URL completa o una imagen en base64
+  if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+    console.log('La imagen ya es una URL completa o base64');
+    return imagen;
+  }
+
+  // Construcción robusta de la URL
+  const baseUrl = import.meta.env.VITE_API_URL;
+  console.log('Base URL desde .env:', baseUrl); // Debug
+  
+  // Limpieza de la ruta de imagen
+  let rutaImagen = imagen;
+  if (rutaImagen.startsWith('/')) {
+    rutaImagen = rutaImagen.substring(1);
+  }
+  
+  const urlFinal = `${baseUrl}/${rutaImagen}`;
+  console.log('URL final construida:', urlFinal); // Debug
+  
+  return urlFinal;
 });
+
+function obtenerUserId() {
+	const token = localStorage.getItem('token');
+	if (token) {
+		try {
+			const decodedToken = jwtDecode(token);
+			userId.value = decodedToken.sub;
+		} catch (error) {
+			console.error('Error al decodificar el token:', error);
+			userId.value = null;
+		}
+	}
+}
 
 const volver = () => {
-  router.go(-1);
+	router.go(-1);
 };
 
 const seleccionarImagen = () => {
-  imagenInput.value.click();
+	imagenInput.value.click();
 };
 
 const cambiarFoto = async (event) => {
-  const archivo = event.target.files[0];
-  if (!archivo) return;
+	const archivo = event.target.files[0];
+	if (!archivo) return;
 
-  // Verificar tipo de archivo
-  if (!archivo.type.match('image.*')) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Formato no válido',
-      text: 'Por favor, selecciona una imagen (JPEG, PNG, etc.)',
-    });
-    return;
-  }
+	const formData = new FormData();
+	formData.append("file", archivo);
 
-  try {
-    await store.dispatch('actualizarFoto', archivo);
-    
-    Swal.fire({
-      icon: 'success',
-      title: 'Imagen actualizada',
-      text: 'Tu foto de perfil se ha actualizado correctamente.',
-    });
-  } catch (error) {
-    console.error("Error al subir la imagen:", error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: error.response?.data?.detail || 'No se pudo actualizar la foto de perfil.',
-    });
-  }
+	try {
+		const response = await api.put(
+			`/usuarios/${userId.value}/actualizar-foto`,
+			formData,
+			{
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				},
+			}
+		);
+
+		await store.dispatch("actualizarFoto", response);
+
+		Swal.fire({
+			icon: 'success',
+			title: 'Imagen actualizada',
+			text: 'Tu foto de perfil se ha actualizado correctamente.',
+		});
+	} catch (error) {
+		console.error("Error al subir la imagen:", error);
+		Swal.fire({
+			icon: 'error',
+			title: 'Error',
+			text: error.response?.data?.detail || 'No se pudo actualizar la foto de perfil.',
+		});
+	}
 };
 
 const eliminarCuenta = async () => {
-  Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción no se puede deshacer.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        await store.dispatch('eliminarCuenta');
-        
-        Swal.fire({
-          icon: 'success',
-          title: 'Cuenta eliminada',
-          text: 'Tu cuenta ha sido eliminada con éxito.',
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          router.push('/index');
-        });
-      } catch (error) {
-        console.error("Error al eliminar la cuenta:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: error.response?.data?.detail || 'No se pudo eliminar la cuenta.',
-        });
-      }
-    }
-  });
+	Swal.fire({
+		title: '¿Estás seguro?',
+		text: 'Esta acción no se puede deshacer.',
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#3085d6',
+		confirmButtonText: 'Sí, eliminar',
+		cancelButtonText: 'Cancelar',
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				await api.delete(`/usuarios/${userId.value}`, {
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('token')}`,
+					},
+				});
+
+				localStorage.removeItem('token');
+				store.commit('setUsuario', null);
+				store.commit('setToken', null);
+
+				Swal.fire({
+					icon: 'success',
+					title: 'Cuenta eliminada',
+					text: 'Tu cuenta ha sido eliminada con éxito.',
+					timer: 2000,
+					showConfirmButton: false,
+				}).then(() => {
+					router.push('/index');
+				});
+
+			} catch (error) {
+				console.error("Error al eliminar la cuenta:", error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: error.response?.data?.detail || 'No se pudo eliminar la cuenta.',
+				});
+			}
+		}
+	});
 };
 
-onMounted(async () => {
-  // Cargamos el usuario si no está en el store
-  if (!store.state.usuario) {
-    await store.dispatch('fetchUsuario');
-  }
+onMounted(() => {
+	obtenerUserId();
+	if (!store.state.usuario) {
+		store.dispatch('fetchUsuario');
+	}
 });
 </script>
-
 
 <style scoped>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
