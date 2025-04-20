@@ -28,11 +28,14 @@ watch(() => store.state.usuario?.imagen, (nuevaImagen, imagenAnterior) => {
 });
 
 const imagenPerfil = computed(() => {
-	const imagen = store.state.usuario?.imagen;
-	console.log("URL de la imagen en el componente:", imagen); // Depuración
-	return imagen
-		? `http://localhost:8000/${imagen}?${Date.now()}` // Timestamp para evitar caché
-		: imagenPorDefecto.value;
+  const imagen = store.state.usuario?.imagen;
+  
+  if (!imagen) return imagenPorDefecto.value;
+  
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const separador = imagen.startsWith('/') ? '' : '/';
+  
+  return `${baseUrl}${separador}${imagen}?t=${Date.now()}`;
 });
 
 // Observar cambios en el store para la imagen del usuario
