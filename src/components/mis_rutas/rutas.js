@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import Perfil from "../Perfil.vue";
 import Reserva from "../Reserva.vue";
 import Platos from "../Platos.vue";
 import Pricipal from "../Pricipal.vue";
@@ -30,13 +30,17 @@ import ResetPassword from "../ResetPassword.vue";
 import CorreoRecuperacion from "../correoRecuperacion.vue";
 import NeqP from "../NequiP.vue";
 import Pasarela from "../Pasarela.vue";
-import NequiP from "../NequiP.vue";
 
 const routes = [
     {
         path: "/index",
         name: "index",
         component: Pricipal
+    },
+    {
+        /*path: "/Perfil",
+        name: "Perfil",
+        component: Perfil*/
     },
     {
         path: "/Reservas",
@@ -176,7 +180,7 @@ const routes = [
     {
         path: "/NequiP",
         name: "nequiP",
-        component: NequiP
+        component: NeqP
     }
     
 ];

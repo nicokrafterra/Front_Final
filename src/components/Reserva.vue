@@ -1,7 +1,7 @@
 <template>
 	<div class="contpri">
 		<button class="back-button" @click="volver">
-			<img src="@/assets/IMG/arrow-left.svg" alt="Volver" />
+			<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
 		</button>
 		<div class="reserva-form">
 			<div class="form">
