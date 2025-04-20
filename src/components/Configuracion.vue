@@ -124,17 +124,27 @@ const usuario = computed(() => {
 });
 
 const imagenPerfil = computed(() => {
-	const imagen = store.state.usuario?.imagen;
-
-	if (!imagen) return imagenPorDefecto.value;
-
-	if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
-		return imagen;
-	}
-
-	const baseUrl = import.meta.env.VITE_API_URL;
-	const separador = imagen.startsWith('/') ? '' : '/';
-	return `${baseUrl}${separador}${imagen}?t=${Date.now()}`;
+  const imagen = store.state.usuario?.imagen;
+  
+  console.log('Imagen del store:', imagen); // Debug
+  
+  if (!imagen) return imagenPorDefecto.value;
+  
+  // Si ya es una URL completa o una imagen en base64
+  if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+    return imagen;
+  }
+  
+  // Construir la URL correctamente
+  const baseUrl = import.meta.env.VITE_API_URL;
+  
+  // Eliminar barras duplicadas
+  const rutaImagen = imagen.startsWith('/') ? imagen.substring(1) : imagen;
+  const urlFinal = `${baseUrl}/${rutaImagen}?t=${Date.now()}`;
+  
+  console.log('URL construida:', urlFinal); // Debug
+  
+  return urlFinal;
 });
 
 function obtenerUserId() {
