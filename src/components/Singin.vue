@@ -127,7 +127,7 @@ export default {
 					return;
 				}
 
-				const response = await axios.get("http://localhost:8000/protegido", {
+				const response = await axios.get("/protegido", {
 					headers: {
 						"Authorization": `Bearer ${token}`,
 					},
