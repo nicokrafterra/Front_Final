@@ -124,25 +124,35 @@ const usuario = computed(() => {
 });
 
 const imagenPerfil = computed(() => {
-  const imagen = store.state.usuario?.imagen;
+  const usuarioStore = store.state.usuario;
+  console.log('Datos completos del usuario desde store:', usuarioStore); // Debug completo
   
-  console.log('Imagen del store:', imagen); // Debug
-  
-  if (!imagen) return imagenPorDefecto.value;
-  
+  if (!usuarioStore || !usuarioStore.imagen) {
+    console.log('No hay imagen en el store, usando imagen por defecto');
+    return imagenPorDefecto.value;
+  }
+
+  const imagen = usuarioStore.imagen;
+  console.log('Imagen del store:', imagen); // Debug específico
+
   // Si ya es una URL completa o una imagen en base64
   if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+    console.log('La imagen ya es una URL completa o base64');
     return imagen;
   }
-  
-  // Construir la URL correctamente
+
+  // Construcción robusta de la URL
   const baseUrl = import.meta.env.VITE_API_URL;
+  console.log('Base URL desde .env:', baseUrl); // Debug
   
-  // Eliminar barras duplicadas
-  const rutaImagen = imagen.startsWith('/') ? imagen.substring(1) : imagen;
-  const urlFinal = `${baseUrl}/${rutaImagen}?t=${Date.now()}`;
+  // Limpieza de la ruta de imagen
+  let rutaImagen = imagen;
+  if (rutaImagen.startsWith('/')) {
+    rutaImagen = rutaImagen.substring(1);
+  }
   
-  console.log('URL construida:', urlFinal); // Debug
+  const urlFinal = `${baseUrl}/${rutaImagen}`;
+  console.log('URL final construida:', urlFinal); // Debug
   
   return urlFinal;
 });
