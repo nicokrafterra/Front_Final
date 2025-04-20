@@ -138,7 +138,7 @@ export default {
 
 			if (valid) {
 				try {
-					const response = await axios.post("http://localhost:8000/usuarios/", {
+					const response = await axios.post("/usuarios/", {
 						nombre: this.nombre,
 						apellido: this.apellido,
 						correoElectronico: this.email,

@@ -104,7 +104,7 @@
   import { computed, ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
-  import axios from 'axios';
+  import api from '@/axiosConfig'; // Cambiado de axios a api
   import Swal from 'sweetalert2';
   import { jwtDecode } from 'jwt-decode';
   
@@ -132,7 +132,7 @@
 	  return imagen;
 	}
 	
-	const baseUrl = 'http://localhost:8000';
+	const baseUrl = import.meta.env.VITE_API_URL; 
 	const separador = imagen.startsWith('/') ? '' : '/';
 	return `${baseUrl}${separador}${imagen}?t=${Date.now()}`;
   });
@@ -166,8 +166,8 @@
 	formData.append("file", archivo);
   
 	try {
-	  const response = await axios.put(
-		`http://localhost:8000/usuarios/${userId.value}/actualizar-foto`,
+	  const response = await api.put(
+		`/usuarios/${userId.value}/actualizar-foto`,
 		formData,
 		{
 		  headers: {
@@ -207,7 +207,7 @@
 	}).then(async (result) => {
 	  if (result.isConfirmed) {
 		try {
-		  await axios.delete(`http://localhost:8000/usuarios/${userId.value}`, {
+		  await api.delete(`/usuarios/${userId.value}`, { 
 			headers: {
 			  Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
