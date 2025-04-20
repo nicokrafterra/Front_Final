@@ -1,63 +1,92 @@
 <template>
-	<div class="container">
-		<div class="form">
-			<form @submit.prevent="handleRegister" class="form_front">
-				<h2 class="form_details">Regístrate</h2>
+  <div class="container">
+    <div class="form">
+      <form @submit.prevent="handleRegister" class="form_front">
+        <h2 class="form_title">Regístrate</h2>
 
-				<input type="text" v-model="nombre" placeholder="Nombre *" required class="input" />
-				<div v-if="nombreError" style="color: red">{{ nombreError }}</div>
+        <div class="form_group">
+          <input type="text" v-model="nombre" placeholder="Nombre *" required class="input" />
+          <transition name="fade">
+            <div v-if="nombreError" class="error-message">{{ nombreError }}</div>
+          </transition>
+        </div>
 
-				<input type="text" v-model="apellido" placeholder="Apellido *" required class="input" />
-				<div v-if="apellidoError" style="color: red">{{ apellidoError }}</div>
+        <div class="form_group">
+          <input type="text" v-model="apellido" placeholder="Apellido *" required class="input" />
+          <transition name="fade">
+            <div v-if="apellidoError" class="error-message">{{ apellidoError }}</div>
+          </transition>
+        </div>
 
-				<input type="email" v-model="email" placeholder="Email *" required class="input" />
-				<div v-if="emailError" style="color: red">{{ emailError }}</div>
+        <div class="form_group">
+          <input type="email" v-model="email" placeholder="Email *" required class="input" />
+          <transition name="fade">
+            <div v-if="emailError" class="error-message">{{ emailError }}</div>
+          </transition>
+        </div>
 
-				<div style="position: relative; display: flex; align-items: center;">
-					<input
-						:type="mostrarPassword ? 'text' : 'password'"
-						v-model="password"
-						placeholder="Password *"
-						required
-						class="input"
-						style="padding-right: 40px;"
-					/>
-					<span @click="mostrarPassword = !mostrarPassword"
-						style="position: absolute; right: 10px; cursor: pointer; color: var(--amarillo-mostaza);">
-						{{ mostrarPassword ? '👁️' : '🙈' }}
-					</span>
-				</div>
+        <div class="form_group">
+          <div style="position: relative; display: flex; align-items: center;">
+            <input
+              :type="mostrarPassword ? 'text' : 'password'"
+              v-model="password"
+              placeholder="Password *"
+              required
+              class="input"
+              style="padding-right: 40px;"
+            />
+            <span @click="mostrarPassword = !mostrarPassword"
+              style="position: absolute; right: 10px; cursor: pointer; color: var(--amarillo-mostaza);">
+              {{ mostrarPassword ? '👁️' : '🙈' }}
+            </span>
+          </div>
+          <transition name="fade">
+            <div v-if="passwordError" class="error-message">{{ passwordError }}</div>
+          </transition>
+        </div>
 
-				<div style="position: relative; display: flex; align-items: center;">
-					<input
-						:type=" mostrarVPassword ? 'text' : 'password'"
-						v-model="vpassword"
-						placeholder="Password *"
-						required
-						class="input"
-						style="padding-right: 40px;"
-					/>
-					<span @click="mostrarVPassword= !mostrarVPassword"
-						style="position: absolute; right: 10px; cursor: pointer; color: var(--amarillo-mostaza);">
-						{{ mostrarVPassword ? '👁️' : '🙈' }}
-					</span>
-				</div>
+        <div class="form_group">
+          <div style="position: relative; display: flex; align-items: center;">
+            <input
+              :type="mostrarVPassword ? 'text' : 'password'"
+              v-model="vpassword"
+              placeholder="Verificar Password *"
+              required
+              class="input"
+              style="padding-right: 40px;"
+            />
+            <span @click="mostrarVPassword = !mostrarVPassword"
+              style="position: absolute; right: 10px; cursor: pointer; color: var(--amarillo-mostaza);">
+              {{ mostrarVPassword ? '👁️' : '🙈' }}
+            </span>
+          </div>
+          <transition name="fade">
+            <div v-if="vpasswordError" class="error-message">{{ vpasswordError }}</div>
+          </transition>
+        </div>
 
-				<input type="text" v-model="numeroCelular" placeholder="Número de Celular *" required class="input" />
-				<div v-if="celularError" style="color: red">{{ celularError }}</div>
+        <div class="form_group">
+          <input type="text" v-model="numeroCelular" placeholder="Número de Celular *" required class="input" />
+          <transition name="fade">
+            <div v-if="celularError" class="error-message">{{ celularError }}</div>
+          </transition>
+        </div>
 
-				<button type="submit" class="btn-reg">Crear</button>
-				<p class="switch">
-					¿Ya tienes una cuenta?
-					<RouterLink to="/Iniciar" class="signup_tog">Inicia Sesión</RouterLink>
-				</p>
-			</form>
-		</div>
-	</div>
+        <div class="btn-container">
+          <button type="submit" class="btn-reg">Crear</button>
+        </div>
+
+        <p class="switch">
+          ¿Ya tienes una cuenta?
+          <RouterLink to="/Iniciar" class="signup_tog">Inicia Sesión</RouterLink>
+        </p>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
-import api from "@/axiosConfig"; // Cambiado de axios a api
+import api from "@/axiosConfig";
 import Swal from "sweetalert2";
 
 export default {
@@ -74,9 +103,9 @@ export default {
       emailError: "",
       passwordError: "",
       vpasswordError: "",
+      celularError: "",
       mostrarPassword: false,
       mostrarVPassword: false,
-      celularError: "",
     };
   },
   methods: {
@@ -89,7 +118,7 @@ export default {
       this.celularError = "";
     },
     validateNombre(nombre) {
-      const nombreRegex = /^[a-zA-Z\s]+$/;
+      const nombreRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$/;
       return nombreRegex.test(nombre);
     },
     validateEmail(email) {
@@ -101,8 +130,8 @@ export default {
       return passwordRegex.test(password);
     },
     validateNumeroCelular(numero) {
-      const numeroRegex = /^[0-9]+$/;
-      return numeroRegex.test(numero) && numero.length >= 10;
+      const numeroRegex = /^[0-9]{10,}$/;
+      return numeroRegex.test(numero);
     },
     async handleRegister() {
       this.clearErrors();
@@ -110,67 +139,101 @@ export default {
       let valid = true;
 
       // Validaciones
-      if (!this.nombre || !this.validateNombre(this.nombre)) {
-        this.nombreError = "El nombre debe contener al menos 2 letras.";
+      if (!this.nombre) {
+        this.nombreError = "El nombre es requerido";
         valid = false;
-      }
-      if (!this.apellido || !this.validateNombre(this.apellido)) {
-        this.apellidoError = "El apellido debe contener al menos 2 letras.";
-        valid = false;
-      }
-      if (!this.email || !this.validateEmail(this.email)) {
-        this.emailError = "Por favor, introduce un correo electrónico válido.";
-        valid = false;
-      }
-      if (!this.password || !this.validatePassword(this.password)) {
-        this.passwordError =
-          "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, 3 números y un carácter especial.";
-        valid = false;
-      }
-      if (this.password !== this.vpassword) {
-        this.vpasswordError = "Las contraseñas no coinciden.";
-        valid = false;
-      }
-      if (!this.numeroCelular || !this.validateNumeroCelular(this.numeroCelular)) {
-        this.celularError = "Número de celular inválido (mínimo 10 dígitos).";
+      } else if (!this.validateNombre(this.nombre)) {
+        this.nombreError = "Debe contener solo letras (mínimo 2)";
         valid = false;
       }
 
-      if (valid) {
-        try {
-          const response = await api.post("/usuarios/", {
-            nombre: this.nombre,
-            apellido: this.apellido,
-            correoElectronico: this.email,
-            contraseñaUsuario: this.password,
-            numeroCelular: this.numeroCelular,
-          });
+      if (!this.apellido) {
+        this.apellidoError = "El apellido es requerido";
+        valid = false;
+      } else if (!this.validateNombre(this.apellido)) {
+        this.apellidoError = "Debe contener solo letras (mínimo 2)";
+        valid = false;
+      }
 
-          // Guardar el token en localStorage
-          const token = response.data.access_token;
-          localStorage.setItem("token", token);
+      if (!this.email) {
+        this.emailError = "El email es requerido";
+        valid = false;
+      } else if (!this.validateEmail(this.email)) {
+        this.emailError = "Ingrese un email válido";
+        valid = false;
+      }
 
-          Swal.fire({
-            icon: "success",
-            title: "¡Registro exitoso!",
-            text: "Te has registrado correctamente. Redirigiendo...",
-            background: "#e0f7fa",
-            color: "#004d40",
-            showConfirmButton: false,
-            timer: 3000,
-          });
+      if (!this.password) {
+        this.passwordError = "La contraseña es requerida";
+        valid = false;
+      } else if (!this.validatePassword(this.password)) {
+        this.passwordError = "Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 3 números y 1 carácter especial";
+        valid = false;
+      }
 
-          setTimeout(() => {
-            this.$router.push("/index"); // Redirigir al usuario
-          }, 1000);
-        } catch (error) {
-          if (error.response && error.response.data) {
-            this.emailError = error.response.data.detail || "Error al registrar usuario.";
+      if (!this.vpassword) {
+        this.vpasswordError = "Verifique su contraseña";
+        valid = false;
+      } else if (this.password !== this.vpassword) {
+        this.vpasswordError = "Las contraseñas no coinciden";
+        valid = false;
+      }
+
+      if (!this.numeroCelular) {
+        this.celularError = "El número de celular es requerido";
+        valid = false;
+      } else if (!this.validateNumeroCelular(this.numeroCelular)) {
+        this.celularError = "Mínimo 10 dígitos numéricos";
+        valid = false;
+      }
+
+      if (!valid) {
+        return;
+      }
+
+      try {
+        const response = await api.post("/usuarios/", {
+          nombre: this.nombre,
+          apellido: this.apellido,
+          correoElectronico: this.email,
+          contraseñaUsuario: this.password,
+          numeroCelular: this.numeroCelular,
+        });
+
+        const token = response.data.access_token;
+        localStorage.setItem("token", token);
+
+        Swal.fire({
+          icon: "success",
+          title: "¡Registro exitoso!",
+          text: "Te has registrado correctamente. Redirigiendo...",
+          background: "#e0f7fa",
+          color: "#004d40",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+
+        setTimeout(() => {
+          this.$router.push("/index");
+        }, 1000);
+      } catch (error) {
+        let errorMessage = "Ocurrió un error al registrar";
+        
+        if (error.response && error.response.data) {
+          if (error.response.data.detail) {
+            errorMessage = error.response.data.detail;
+          } else if (error.response.data.correoElectronico) {
+            this.emailError = error.response.data.correoElectronico[0];
+          } else if (error.response.data.numeroCelular) {
+            this.celularError = error.response.data.numeroCelular[0];
           }
+        }
+
+        if (errorMessage !== "Ocurrió un error al registrar") {
           Swal.fire({
             icon: "error",
-            title: "Error al registrar",
-            text: "Ocurrió un error al intentar registrar el usuario",
+            title: "Error",
+            text: errorMessage,
             background: "#ffebee",
             color: "#b71c1c",
           });
@@ -180,7 +243,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
@@ -193,6 +255,7 @@ export default {
   --amarillo-mostaza: #D4A017;
   --texto: #fff;
   --fondo: #212121;
+  --error: #ff4444;
 }
 
 .container {
@@ -202,12 +265,13 @@ export default {
   min-height: 100vh;
   background-color: var(--marron-tierra);
   padding: 20px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .form {
   width: 100%;
   max-width: 400px;
-	display: flex;
+  display: flex;
 }
 
 .form_front {
@@ -215,6 +279,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
   padding: 40px 30px;
   border-radius: 15px;
   background-color: #3e3e3e;
@@ -222,10 +287,11 @@ export default {
 }
 
 .form_title {
-  color: var(--rojo-terracota);
+  color: var(--amarillo-mostaza);
   margin-bottom: 25px;
   font-size: 1.8rem;
   font-weight: 600;
+  text-align: center;
 }
 
 .form_group {
@@ -234,7 +300,7 @@ export default {
 }
 
 .input {
-	width: 100%;
+  width: 100%;
   height: 50px;
   padding: 0 15px;
   font-size: 16px;
@@ -254,6 +320,21 @@ export default {
   outline: none;
   border-color: var(--amarillo-mostaza);
   box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.3);
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  padding: 2px 8px;
+  animation: shake 0.5s ease-in-out;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 
 .btn-container {
@@ -276,22 +357,36 @@ export default {
 
 .btn-reg:hover {
   background-color: #a53a0c;
+  transform: translateY(-2px);
+}
+
+.btn-reg:active {
+  transform: translateY(0);
 }
 
 .switch {
   margin-top: 25px;
-  color: var(--marron-tierra);
+  color: var(--beige-arena);
   text-align: center;
+  font-size: 0.9rem;
 }
 
 .signup_tog {
-  color: var(--rojo-terracota);
+  color: var(--amarillo-mostaza);
   font-weight: 600;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .signup_tog:hover {
   text-decoration: underline;
+  color: var(--rojo-terracota);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
 }
 
 /* Responsive */
@@ -307,12 +402,15 @@ export default {
   .input {
     height: 45px;
     font-size: 15px;
-		width: 100%;
   }
   
   .btn-reg {
     padding: 10px;
     font-size: 15px;
+  }
+  
+  .error-message {
+    font-size: 0.75rem;
   }
 }
 </style>

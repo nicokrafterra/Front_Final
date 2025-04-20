@@ -32,11 +32,45 @@ export default {
     console.log("Datos enviados:", datos); // Verifica los datos antes de enviar
 
     const response = await api.post("/reset-password", datos);
-    alert("Contraseña restablecida correctamente.");
+	Swal.fire({
+      icon: "success",
+      title: "¡Contraseña restablecida!",
+      text: "Tu contraseña ha sido restablecida correctamente.",
+      confirmButtonText: "OK",
+    });
     router.push("/Iniciar");
   } catch (error) {
     console.error("Error en la solicitud:", error.response?.data); // Muestra el error del backend
-    alert("Error al restablecer contraseña.");
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Hubo un problema al restablecer la contraseña.",
+      confirmButtonText: "Intentar de nuevo",
+    });
+	
+	// Manejo de errores específico
+	if (error.response && error.response.status === 400) {
+	  Swal.fire({
+		icon: "error",
+		title: "Error",
+		text: "El token es inválido o ha expirado.",
+		confirmButtonText: "Entendido",
+	  });
+	} else if (error.response && error.response.status === 500) {
+	  Swal.fire({
+		icon: "error",
+		title: "Error del servidor",
+		text: "Por favor, intenta más tarde.",
+		confirmButtonText: "Entendido",
+	  });
+	} else {
+	  Swal.fire({
+		icon: "error",
+		title: "Error desconocido",
+		text: "Por favor, intenta más tarde.",
+		confirmButtonText: "Entendido",
+	  });
+	}
   }
 };
 

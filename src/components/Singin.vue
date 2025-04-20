@@ -171,6 +171,8 @@ export default {
   min-height: 100vh;
   background-color: var(--marron-tierra);
   padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .form {
