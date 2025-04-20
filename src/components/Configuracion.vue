@@ -351,6 +351,7 @@ onMounted(() => {
 	border: 3px solid rgba(255, 255, 255, 0.2);
 	transition: var(--transition);
 	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	display: block;
 }
 
 .profile-avatar:hover .profile-image,
