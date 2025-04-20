@@ -96,25 +96,31 @@ export default {
 					}
 				}
 			} catch (error) {
-				if (error.response) {
-					if (error.response.status === 401) {
-						this.loginError = "Credenciales incorrectas. Intenta de nuevo.";
-					} else if (error.response.status === 400) {
-						this.loginError = "Solicitud incorrecta. Verifica los datos.";
-					} else {
-						this.loginError = "Error al iniciar sesión. Inténtalo más tarde.";
-					}
+				if (error.response && error.response.status === 401) {
+					Swal.fire({
+						icon: "error",
+						title: "Error de autenticación",
+						text: "Credenciales incorrectas. Por favor, verifica tu email y contraseña.",
+						background: "#ffebee",
+						color: "#b71c1c",
+					});
+				} else if (error.response && error.response.status === 400) {
+					Swal.fire({
+						icon: "error",
+						title: "Solicitud inválida",
+						text: "Por favor, completa todos los campos correctamente.",
+						background: "#ffebee",
+						color: "#b71c1c",
+					});
 				} else {
-					this.loginError = "No se pudo conectar con el servidor.", error;
+					Swal.fire({
+						icon: "error",
+						title: "Error del servidor",
+						text: "Ocurrió un problema al intentar iniciar sesión. Inténtalo nuevamente más tarde.",
+						background: "#ffebee",
+						color: "#b71c1c",
+					});
 				}
-
-				Swal.fire({
-					icon: "error",
-					title: "Error al iniciar sesión",
-					text: this.loginError,
-					background: "#ffebee",
-					color: "#b71c1c",
-				});
 			}
 		},
 
