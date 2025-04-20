@@ -124,18 +124,25 @@
   });
   
   const imagenPerfil = computed(() => {
-	const imagen = store.state.usuario?.imagen;
-	
-	if (!imagen) return imagenPorDefecto.value;
-	
-	if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
-	  return imagen;
-	}
-	
-	const baseUrl = import.meta.env.VITE_API_URL; 
-	const separador = imagen.startsWith('/') ? '' : '/';
-	return `${baseUrl}${separador}${imagen}?t=${Date.now()}`;
-  });
+  const imagen = store.state.usuario?.imagen;
+  
+  // Si no hay imagen o es la por defecto
+  if (!imagen || imagen === 'default' || imagen.includes('fa-user-circle')) {
+    return imagenPorDefecto.value;
+  }
+  
+  // Si ya es una URL completa (http o data:image)
+  if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+    return imagen;
+  }
+  
+  // Construir URL desde el backend
+  const baseUrl = import.meta.env.VITE_API_URL;
+  // Asegurarse de no duplicar barras /
+  const separador = imagen.startsWith('/') ? '' : '/';
+  return `${baseUrl}${separador}${imagen}?t=${Date.now()}`; // Cache buster
+});
+
   
   function obtenerUserId() {
 	const token = localStorage.getItem('token');
@@ -239,12 +246,17 @@
 	});
   };
   
-  onMounted(() => {
-	obtenerUserId();
-	if (!store.state.usuario) {
-	  store.dispatch('fetchUsuario');
-	}
-  });
+  onMounted(async () => {
+  obtenerUserId();
+  if (!store.state.usuario) {
+    await store.dispatch('fetchUsuario');
+  }
+  
+  // Debug: Verifica los datos
+  console.log('Usuario:', store.state.usuario);
+  console.log('Imagen:', store.state.usuario?.imagen);
+  console.log('UserId:', userId.value);
+});
   </script>
   
   <style scoped>
