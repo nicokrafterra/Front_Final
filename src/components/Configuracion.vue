@@ -123,24 +123,24 @@
 	};
   });
   
-  const imagenPerfil = computed(() => {
+const imagenPerfil = computed(() => {
   const imagen = store.state.usuario?.imagen;
   
-  // Si no hay imagen o es la por defecto
-  if (!imagen || imagen === 'default' || imagen.includes('fa-user-circle')) {
-    return imagenPorDefecto.value;
+  // Si no hay imagen o es el valor por defecto
+  if (!imagen || imagen === 'default' || imagen === 'fas fa-user-circle') {
+    return null; // Usaremos el ícono por defecto
   }
   
-  // Si ya es una URL completa (http o data:image)
-  if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+  // Si ya es una URL completa (http/https o data:image)
+  if (/^https?:\/\//.test(imagen) || imagen.startsWith('data:image')) {
     return imagen;
   }
   
   // Construir URL desde el backend
-  const baseUrl = import.meta.env.VITE_API_URL;
-  // Asegurarse de no duplicar barras /
-  const separador = imagen.startsWith('/') ? '' : '/';
-  return `${baseUrl}${separador}${imagen}?t=${Date.now()}`; // Cache buster
+  const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ''); // Eliminar barra final si existe
+  const imagePath = imagen.replace(/^\//, ''); // Eliminar barra inicial si existe
+  
+  return `${baseUrl}/${imagePath}?t=${Date.now()}`; // Cache buster
 });
 
   
