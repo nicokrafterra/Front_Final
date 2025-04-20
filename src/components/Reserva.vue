@@ -42,151 +42,173 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { jwtDecode } from 'jwt-decode';// Importación correcta
+import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import api from '@/axiosConfig'; // Usar axios configurado en lugar de fetch
 
 const router = useRouter();
+
+// 🔹 Estados reactivos
 const fecha = ref('');
 const tipo_Reserva = ref('');
-const tipo_Plan = ref('');
-const minFecha = ref('');
+const minFecha = ref(getMinFecha());
 const usuarioId = ref(null);
 const tipoPlan = ref(null);
+const isLoading = ref(false);
 
-// 🔹 Obtener el ID de usuario desde el token JWT usando "sub"
+// 🔹 Obtener fecha mínima (10:00 AM del día actual)
+function getMinFecha() {
+  const ahora = new Date();
+  const fechaMinima = new Date(
+    ahora.getFullYear(),
+    ahora.getMonth(),
+    ahora.getDate(),
+    10, 0, 0
+  );
+  return fechaMinima.toISOString().slice(0, 16);
+}
+
+// 🔹 Obtener ID de usuario desde JWT
 const obtenerUsuarioDesdeJWT = () => {
-	const token = localStorage.getItem('token');
-	if (token) {
-		try {
-			const decodedToken = jwtDecode(token);
-			// Usa "sub" (como se definió en el token) en lugar de "user_id"
-			usuarioId.value = decodedToken.sub;
-			if (!usuarioId.value) {
-				console.error('El token no contiene "sub".');
-			}
-		} catch (error) {
-			console.error('Error al decodificar el token:', error);
-			usuarioId.value = null;
-		}
-	}
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No hay token disponible');
+    
+    const decodedToken = jwtDecode(token);
+    usuarioId.value = decodedToken.sub;
+    
+    if (!usuarioId.value) {
+      throw new Error('El token no contiene "sub"');
+    }
+  } catch (error) {
+    console.error('Error al obtener usuario:', error);
+    usuarioId.value = null;
+    mostrarErrorSesion();
+  }
 };
 
-// 🔹 Obtener el tipo de plan desde el almacenamiento local (simulando Vuex)
+// 🔹 Obtener tipo de plan desde localStorage
 const obtenerTipoPlan = () => {
-	const planGuardado = localStorage.getItem('tipoPlan');
-	if (planGuardado) {
-		tipoPlan.value = JSON.parse(planGuardado);
-	}
+  try {
+    const planGuardado = localStorage.getItem('tipoPlan');
+    if (planGuardado) {
+      tipoPlan.value = JSON.parse(planGuardado);
+    }
+  } catch (error) {
+    console.error('Error al parsear tipoPlan:', error);
+    tipoPlan.value = null;
+  }
 };
 
-// 🔹 Establecer la fecha mínima (10:00 AM del día actual)
-minFecha.value = (() => {
-	const ahora = new Date();
-	const fechaMinima = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 10, 0, 0);
-	return fechaMinima.toISOString().slice(0, 16);
-})();
-
-// 🔹 Función para volver a la pantalla principal
-const volver = () => {
-	router.push('/index');
-};
-
-// 🔹 Computed para mostrar la descripción del tipo de reserva
+// 🔹 Computed para descripción de reserva
 const descripcionReserva = computed(() => {
-	if (tipo_Reserva.value === 'basica') {
-		return "La reserva básica ofrece acceso estándar a nuestras instalaciones con un costo más económico.";
-	} else if (tipo_Reserva.value === 'premium') {
-		return "La reserva premium incluye servicios exclusivos como acceso VIP y opciones personalizadas.";
-	}
-	return "";
+  const descripciones = {
+    basica: "La reserva básica ofrece acceso estándar a nuestras instalaciones con un costo más económico.",
+    premium: "La reserva premium incluye servicios exclusivos como acceso VIP y opciones personalizadas."
+  };
+  return descripciones[tipo_Reserva.value] || "";
 });
 
-// 🔹 Función para hacer la reserva
+// 🔹 Validación del formulario
+const formularioValido = computed(() => {
+  return (
+    usuarioId.value &&
+    tipoPlan.value?.id &&
+    fecha.value &&
+    tipo_Reserva.value
+  );
+});
+
+// 🔹 Hacer reserva
 const hacerReserva = async () => {
-	if (!usuarioId.value) {
-		Swal.fire({
-			icon: 'warning',
-			title: 'Sesión no válida',
-			text: 'Debes iniciar sesión para realizar una reserva.',
-			confirmButtonColor: '#d33',
-		});
-		return;
-	}
+  if (!formularioValido.value) {
+    mostrarErrorValidacion();
+    return;
+  }
 
-	if (!tipoPlan.value || !tipoPlan.value.tipo) {
-		Swal.fire({
-			icon: 'warning',
-			title: 'Selección de Plan',
-			text: 'Por favor, selecciona el tipo de plan que deseas.',
-			confirmButtonColor: '#d33',
-		});
-		return;
-	}
+  isLoading.value = true;
 
-	const reservaData = {
-		usuario_id: usuarioId.value,
-		plan_id: tipoPlan.value.id,
-		fecha: fecha.value,
-		tipo_Reserva: tipo_Reserva.value,
-		tipo_Plan: tipoPlan.value.tipo,
-		Detalle: tipoPlan.value.nombre,
-		pagada: false,
-	};
+  const reservaData = {
+    usuario_id: usuarioId.value,
+    plan_id: tipoPlan.value.id,
+    fecha: fecha.value,
+    tipo_Reserva: tipo_Reserva.value,
+    tipo_Plan: tipoPlan.value.tipo,
+    Detalle: tipoPlan.value.nombre,
+    pagada: false,
+  };
 
-	console.log("Datos enviados:", reservaData);
-
-	try {
-		const token = localStorage.getItem('token');
-		const response = await fetch('/reservas/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`, // Se incluye el token JWT
-			},
-			body: JSON.stringify(reservaData),
-		});
-
-		if (!response.ok) {
-			const errorData = await response.json();
-			console.error("Detalles del error:", errorData);
-			throw new Error('Error al hacer la reserva');
-		}
-
-		const data = await response.json();
-		console.log('Reserva exitosa:', data);
-
-		fecha.value = '';
-		tipo_Reserva.value = '';
-		tipo_Plan.value = '';
-
-		localStorage.removeItem("tipoPlan");
-
-		Swal.fire({
-			icon: 'success',
-			title: 'Reserva exitosa',
-			text: 'Tu reserva ha sido realizada con éxito.',
-			confirmButtonColor: '#3085d6',
-		});
-	} catch (error) {
-		console.error('Error:', error);
-		Swal.fire({
-			icon: 'error',
-			title: 'Error',
-			text: 'No se pudo realizar la reserva. Intenta nuevamente.',
-			confirmButtonColor: '#d33',
-		});
-	}
+  try {
+    const response = await api.post('/reservas/', reservaData);
+    
+    if (response.status === 201) {
+      await mostrarExitoReserva();
+      resetearFormulario();
+      router.push('/ResVer');
+    } else {
+      throw new Error(`Error ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error en reserva:', error);
+    mostrarErrorReserva(error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-// 🔹 Función para ver reservas
+// 🔹 Helpers para mensajes y acciones
+const mostrarErrorSesion = () => {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Sesión no válida',
+    text: 'Debes iniciar sesión para realizar una reserva.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+const mostrarErrorValidacion = () => {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Datos incompletos',
+    text: 'Por favor completa todos los campos requeridos.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+const mostrarExitoReserva = async () => {
+  await Swal.fire({
+    icon: 'success',
+    title: 'Reserva exitosa',
+    text: 'Tu reserva ha sido realizada con éxito.',
+    confirmButtonColor: '#3085d6',
+    timer: 2000,
+    timerProgressBar: true,
+  });
+};
+
+const mostrarErrorReserva = (error) => {
+  Swal.fire({
+    icon: 'error',
+    title: 'Error en reserva',
+    text: error.response?.data?.message || 'No se pudo realizar la reserva. Intenta nuevamente.',
+    confirmButtonColor: '#d33',
+  });
+};
+
+const resetearFormulario = () => {
+  fecha.value = '';
+  tipo_Reserva.value = '';
+  localStorage.removeItem('tipoPlan');
+};
+
 const verReservas = () => {
-	router.push('/ResVer');
+  router.push('/ResVer');
 };
 
-// 🔹 Recuperar datos al montar el componente
+// 🔹 Inicialización
 onMounted(() => {
-	obtenerUsuarioDesdeJWT();
-	obtenerTipoPlan();
+  obtenerUsuarioDesdeJWT();
+  obtenerTipoPlan();
 });
 </script>
 
