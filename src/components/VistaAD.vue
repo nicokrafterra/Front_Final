@@ -76,15 +76,14 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import api from '@/axiosConfig'
-import ClientesView from './ClientesView.vue'
-import ReservasView from './ReservasView.vue'
-import tablaPqrs from './tablaPqrs.vue'
-import FormPlanes from './FormPlanes.vue'
-import Configuracion from './Configuracion.vue'
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import ClientesView from './ClientesView.vue';
+import ReservasView from './ReservasView.vue';
+import tablaPqrs from './tablaPqrs.vue';
+import FormPlanes from './FormPlanes.vue';
+import Configuracion from './Configuracion.vue';
 
 export default {
   name: 'AdminLayout',
@@ -96,11 +95,11 @@ export default {
     Configuracion
   },
   setup() {
-    const store = useStore()
-    const router = useRouter()
-    const sidebarCollapsed = ref(false)
-    const isMobile = ref(window.innerWidth <= 768)
-    const activeComponent = ref('ClientesView')
+    const store = useStore();
+    const router = useRouter();
+    const sidebarCollapsed = ref(false);
+    const isMobile = ref(window.innerWidth <= 768);
+    const activeComponent = ref('ClientesView');
 
     const menuItems = [
       {
@@ -123,100 +122,72 @@ export default {
         title: 'Planes',
         icon: 'help.svg'
       }
-    ]
-
-    // Cargar datos del usuario al iniciar
-    const loadUserData = async () => {
-      try {
-        const response = await api.get('/auth/me')
-        store.commit('setUser', response.data)
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error)
-        if (error.response?.status === 401) {
-          router.push('/Iniciar')
-        }
-      }
-    }
+    ];
 
     const setActiveComponent = (component) => {
-      activeComponent.value = component
+      activeComponent.value = component;
       if (isMobile.value) {
-        sidebarCollapsed.value = true
+        sidebarCollapsed.value = true;
       }
-    }
+    };
 
     const toggleCollapse = () => {
-      sidebarCollapsed.value = !sidebarCollapsed.value
-    }
+      sidebarCollapsed.value = !sidebarCollapsed.value;
+    };
 
     const checkMobile = () => {
-      isMobile.value = window.innerWidth <= 768
+      isMobile.value = window.innerWidth <= 768;
       if (isMobile.value) {
-        sidebarCollapsed.value = true
+        sidebarCollapsed.value = true;
       }
-    }
+    };
 
     const logout = async () => {
       try {
-        await api.post('/auth/logout')
+        // Limpiar el estado de autenticación
+        await store.dispatch('logout');
         
-        // Limpiar estado local
-        store.commit('logout')
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        // Limpiar localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         
-        // Redirigir y mostrar feedback
-        router.push('/Iniciar')
-        showAlert('success', 'Sesión cerrada correctamente')
+        // Redirigir a la página de inicio de sesión
+        router.push('/Iniciar');
+        
+        // Opcional: Mostrar mensaje de éxito
+        store.commit('setAlert', {
+          type: 'success',
+          message: 'Sesión cerrada correctamente'
+        });
       } catch (error) {
-        console.error('Error al cerrar sesión:', error)
-        showAlert('error', error.response?.data?.message || 'Error al cerrar sesión')
-        
-        // Forzar logout incluso si falla la llamada al servidor
-        store.commit('logout')
-        localStorage.removeItem('token')
-        router.push('/Iniciar')
+        console.error('Error al cerrar sesión:', error);
+        store.commit('setAlert', {
+          type: 'error',
+          message: 'Error al cerrar sesión'
+        });
       }
-    }
+    };
 
-    const showAlert = (type, message) => {
-      store.commit('setAlert', {
-        type,
-        message
-      })
-    }
+    onMounted(() => {
+      window.addEventListener('resize', checkMobile);
+      checkMobile();
+    });
 
     const getImageUrl = (name) => {
-      return new URL(`../assets/${name}`, import.meta.url).href
-    }
+      return new URL(`../assets/${name}`, import.meta.url).href;
+    };
 
     const usuario = computed(() => store.state.usuario || {
       nombre: 'Usuario',
       correoElectronico: 'usuario@ejemplo.com',
       imagen: null
-    })
+    });
 
     const imagenPerfil = computed(() => {
-      const imagen = usuario.value.imagen
-      
-      if (!imagen) return getImageUrl('default-avatar.jpg')
-      
-      if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
-        return imagen
-      }
-      
-      // Usar variable de entorno para la URL base
-      const baseUrl = import.meta.env.VITE_API_URL
-      const separador = imagen.startsWith('/') ? '' : '/'
-      return `${baseUrl}${separador}${imagen}?t=${Date.now()}`
-    })
-
-    // Inicialización
-    onMounted(() => {
-      window.addEventListener('resize', checkMobile)
-      checkMobile()
-      loadUserData()
-    })
+      return usuario.value.imagen
+        ? `http://localhost:8000/${usuario.value.imagen}`
+        : getImageUrl('default-avatar.jpg');
+    });
 
     return {
       sidebarCollapsed,
@@ -229,9 +200,9 @@ export default {
       imagenPerfil,
       usuario,
       logout
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>

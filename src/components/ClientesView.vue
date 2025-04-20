@@ -227,6 +227,7 @@ button:hover {
 <script>
 import axios from 'axios';
 import UserForm from './UserForm.vue';
+import api from '@/axiosConfig';
 
 
 export default {
@@ -242,7 +243,7 @@ export default {
 	methods: {
 		async cargarUsuarios() {
 			try {
-				const response = await axios.get("http://127.0.0.1:8000/usuarios");
+				const response = await api.get("/usuarios");
 				console.log(response.data)
 				this.users = response.data;
 			} catch (error) {
