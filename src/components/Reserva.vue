@@ -1,42 +1,67 @@
 <template>
-	<div class="contpri">
-		<button class="back-button" @click="volver">
-			<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
-		</button>
-		<div class="reserva-form">
-			<div class="form">
-				<form @submit.prevent="hacerReserva">
-					<h2 class="h21">Formulario de Reserva</h2>
-					<h2 class="h22">¡has tu reserva ya!</h2>
+  <div class="contpri">
+    <button class="back-button" @click="volver">
+      <font-awesome-icon icon="fa-solid fa-arrow-left" />
+    </button>
+    
+    <div class="reserva-form">
+      <div class="form">
+        <form @submit.prevent="hacerReserva">
+          <div class="form-header">
+            <h1 class="h21">Formulario de Reserva</h1>
+            <h2 class="h22">¡Haz tu reserva ya!</h2>
+          </div>
 
-					<div class="form-group">
-						<RouterLink class="reserva-button Text" to="tpPlan">Selecciona el Tipo de Plan</RouterLink>
-					</div>
-					<label class="Text" for="fecha">Fecha de Reserva: </label>
-					<div class="form-group">
-						<input type="datetime-local" id="fecha" v-model="fecha" :min="minFecha"
-						required />
-					</div>
-					<label for="tipo_Reserva" class="Text">Tipo de Reserva: </label>
-					<div class="form-group">
-						<select id="tipo_Reserva" v-model="tipo_Reserva" required>
-							<option disabled value="" class="Text">Selecciona un tipo de reserva</option>
-							<option value="basica" class="Text">Reserva Básica</option>
-							<option value="premium" class="Text">Reserva Premium</option>
-						</select>
-					</div>
+          <div class="form-group">
+            <RouterLink class="reserva-button" to="tpPlan">
+              <font-awesome-icon icon="fa-solid fa-calendar-check" />
+              <span>Selecciona el Tipo de Plan</span>
+            </RouterLink>
+          </div>
+          
+          <div class="form-group">
+            <label for="fecha">
+              <font-awesome-icon icon="fa-solid fa-calendar-days" />
+              <span>Fecha de Reserva:</span>
+            </label>
+            <input type="datetime-local" id="fecha" v-model="fecha" :min="minFecha" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="tipo_Reserva">
+              <font-awesome-icon icon="fa-solid fa-tag" />
+              <span>Tipo de Reserva:</span>
+            </label>
+            <select id="tipo_Reserva" v-model="tipo_Reserva" required>
+              <option disabled value="">Selecciona un tipo de reserva</option>
+              <option value="basica">Reserva Básica</option>
+              <option value="premium">Reserva Premium</option>
+            </select>
+          </div>
 
-					<div v-if="descripcionReserva" class="texto-descriptivo">
-						<p>{{ descripcionReserva }}</p>
-					</div>
+          <div v-if="descripcionReserva" class="texto-descriptivo">
+            <font-awesome-icon icon="fa-solid fa-circle-info" />
+            <p>{{ descripcionReserva }}</p>
+          </div>
 
-
-					<button type="submit" class="reserva-button Text">Hacer Reserva</button>
-					<button class="ver-reservas-button Text" @click="verReservas">Ver todas mis reservas</button>
-				</form>
-			</div>
-		</div>
-	</div>
+          <div class="form-actions">
+            <button type="submit" class="reserva-button" :disabled="isLoading">
+              <font-awesome-icon v-if="isLoading" icon="fa-solid fa-spinner" spin />
+              <template v-else>
+                <font-awesome-icon icon="fa-solid fa-bookmark" />
+                <span>Hacer Reserva</span>
+              </template>
+            </button>
+            
+            <button type="button" class="ver-reservas-button" @click="verReservas">
+              <font-awesome-icon icon="fa-solid fa-list" />
+              <span>Ver mis reservas</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -44,7 +69,31 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
-import api from '@/axiosConfig'; // Usar axios configurado en lugar de fetch
+import api from '@/axiosConfig';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { 
+  faArrowLeft, 
+  faCalendarCheck, 
+  faCalendarDays, 
+  faTag, 
+  faCircleInfo, 
+  faBookmark, 
+  faList,
+  faSpinner
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+// Añadir iconos a la librería
+library.add(
+  faArrowLeft, 
+  faCalendarCheck, 
+  faCalendarDays, 
+  faTag, 
+  faCircleInfo, 
+  faBookmark, 
+  faList,
+  faSpinner
+);
 
 const router = useRouter();
 
@@ -235,6 +284,9 @@ const verReservas = () => {
   router.push('/ResVer');
 };
 
+const volver = () => {
+  router.push('/index');
+};
 // 🔹 Inicialización
 onMounted(() => {
   obtenerUsuarioDesdeJWT();
@@ -247,215 +299,242 @@ onMounted(() => {
 
 
 <style scoped>
-
-.Text{
-	font-family: 'Courier New', Courier, monospace;
-	font-size: 30px;
+/* Variables de colores */
+:root {
+  --verde-oliva: #6B8E23;
+  --marron-tierra: #8B5A2B;
+  --beige-arena: #F0E2C9;
+  --rojo-terracota: #C1440E;
+  --amarillo-mostaza: #D4A017;
+  --blanco: #FFFFFF;
+  --texto-oscuro: #212121;
+  --sombra: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transicion: all 0.3s ease;
 }
 
-.h21{
-	font-family: 'Courier New', Courier, monospace;
-	font-size: 40px;
+/* Estilos base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-.h22{
-	font-family:'Courier New', Courier, monospace;
-	font-size: 35px;
-}
+
 .contpri {
-	height: 100vh;
-	display: flex;
-	justify-content: end;
-	align-items: center; /* Centrar verticalmente */
-	width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: var(--beige-arena);
+  position: relative;
 }
 
 .back-button {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-	background: none;
-	border: none;
-	cursor: pointer;
-	transition: 0.35s;
-	height: 40px;
-	width: 60px;
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: #6B8E23;
+  color: var(--blanco);
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:  0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
 .back-button:hover {
-	transform: scale(1.05);
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.3),
-		1px 1px 10px rgba(255, 255, 255, 0.6),
-		inset 2px 2px 10px rgba(0, 0, 0, 0.3),
-		inset -1px -1px 5px rgba(255, 255, 255, 0.6);
-	background-color: #6B8E23; /* Verde Oliva al hacer hover */
-	border-radius: 6px;
-}
-
-.back-button img {
-	width: 24px;
-	height: 24px;
-	transition: transform 0.2s ease;
-}
-
-.reserva-message {
-	margin-top: 20px;
-	color: #707070;
-	font-size: 14px;
-	text-align: center; /* Centrar el mensaje */
-}
-
-.reserva-button {
-	padding: 10px 35px;
-	cursor: pointer;
-	background-color: #6B8E23; /* Verde Oliva */
-	border-radius: 6px;
-	border: 2px solid #6B8E23;
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.1),
-		1px 1px 10px rgba(255, 255, 255, 0.6);
-	color: #fff;
-	font-size: 15px;
-	font-weight: bold;
-	transition: 0.35s;
-	text-decoration: none;
-	width: 100%;
-}
-
-.reserva-button:hover {
-	transform: scale(1.01);
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2),
-		1px 1px 10px rgba(255, 255, 255, 0.6),
-		inset 2px 2px 10px rgba(0, 0, 0, 0.2),
-		inset -1px -1px 5px rgba(255, 255, 255, 0.6);
-	background-color: #8B5A2B; /* Marrón Tierra al hacer hover */
+  background: #8B5A2B;
+  color: #6B8E23;
+  transform: translateY(-2px);
 }
 
 .reserva-form {
-	width: 100%;
-	max-width: 800px;
-	height: 100%; /* Ancho máximo del formulario */
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .form {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	backface-visibility: hidden;
-	padding: 40px 30px; /* Padding ajustado */
-	border-radius: 15px;
-	background-color: #f0e2c9; /* Beige Arena como fondo principal */
-	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
-	width: 100%;
-	height: 100%;
+  background-color: #F0E2C9;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: var(--sombra);
+  width: 100%;
 }
 
-.form input,
-.form select {
-	width: 100%;
-	min-height: 45px;
-	color: #212121; /* Texto oscuro */
-	outline: none;
-	transition: 0.35s;
-	padding: 0px 10px;
-	background-color: #FFFFFF; /* Fondo blanco */
-	border-radius: 6px;
-	border: 2px solid #8B5A2B; /* Marrón Tierra */
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.1),
-		1px 1px 10px rgba(255, 255, 255, 0.6);
-	margin-bottom: 15px; /* Espaciado entre inputs */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.form input:focus,
-.form select:focus {
-	border-color: #D4A017; /* Amarillo Mostaza al enfocar */
-	transform: scale(1.02);
+.h21 {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 2rem;
+  color: var(--marron-tierra);
+  margin-bottom: 0.5rem;
 }
 
-.form .ver-reservas-button {
-	padding: 10px 35px;
-	cursor: pointer;
-	background-color: #D4A017; /* Amarillo Mostaza */
-	border-radius: 6px;
-	border: 2px solid #D4A017;
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.1),
-		1px 1px 10px rgba(255, 255, 255, 0.6);
-	color: #fff;
-	font-size: 15px;
-	font-weight: bold;
-	transition: 0.35s;
-	width: 100%;
-	margin-top: 10px; /* Espaciado superior */
-}
-
-.form .ver-reservas-button:hover {
-	transform: scale(1.01);
-	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2),
-		1px 1px 10px rgba(255, 255, 255, 0.6),
-		inset 2px 2px 10px rgba(0, 0, 0, 0.2),
-		inset -1px -1px 5px rgba(255, 255, 255, 0.6);
-	background-color: #C1440E; /* Rojo Terracota al hacer hover */
+.h22 {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  color: var(--verde-oliva);
+  font-weight: normal;
 }
 
 .form-group {
-	margin: 20px 0;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--marron-tierra);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--marron-tierra);
+  border-radius: 0.5rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  transition: var(--transicion);
+}
+
+input:focus, select:focus {
+  border-color: var(--amarillo-mostaza);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.2);
 }
 
 .texto-descriptivo {
-	margin: 20px 0;
-	text-align: center;
-	color: #6B8E23; /* Verde Oliva */
-	font-size: 14px;
-	width: 100%;
+  background-color: rgba(107, 142, 35, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
-#tipo_Reserva,
-#fecha {
-	width: 100%;
+.texto-descriptivo p {
+  color: var(--verde-oliva);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.reserva-button, .ver-reservas-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.reserva-button {
+  background-color: #6B8E23;
+  color: var(--blanco);
+}
+
+.reserva-button:hover {
+  background-color: #8B5A2B;
+  color: #6B8E23;
+  transform: translateY(-2px);
+}
+
+.ver-reservas-button {
+  background-color: #D4A017;
+  color: var(--blanco);
+}
+
+.ver-reservas-button:hover {
+  background-color: #C1440E;
+  color: #D4A017;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-	.form {
-		padding: 20px;
-	}
-
-	.form input,
-	.form select {
-		width: 100%;
-	}
-
-	.reserva-button,
-	.ver-reservas-button {
-		width: 100%;
-	}
+  .contpri {
+    padding: 1rem;
+  }
+  
+  .form {
+    padding: 1.5rem;
+  }
+  
+  .h21 {
+    font-size: 1.5rem;
+  }
+  
+  .h22 {
+    font-size: 1.2rem;
+  }
+  
+  .back-button {
+    top: 1rem;
+    left: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 
 @media (max-width: 480px) {
-	.form {
-		padding: 15px;
-	}
+  .form {
+    padding: 1rem;
+  }
+  
+  .h21 {
+    font-size: 1.3rem;
+  }
+  
+  .h22 {
+    font-size: 1rem;
+  }
+  
+  label, input, select, .reserva-button, .ver-reservas-button {
+    font-size: 0.9rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .texto-descriptivo p {
+    font-size: 0.8rem;
+  }
+}
 
-	.form input,
-	.form select {
-		font-size: 14px;
-		padding: 5px;
-	}
-
-	.reserva-button,
-	.ver-reservas-button {
-		font-size: 14px;
-		padding: 8px 20px;
-	}
-
-	.texto-descriptivo {
-		font-size: 12px;
-	}
+/* Estado de carga */
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>

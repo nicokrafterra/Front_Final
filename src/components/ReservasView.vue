@@ -1,49 +1,70 @@
 <template>
-  <div class="contpri">
-    <nav class="reservas-container">
-      <h2>Reservas de Usuarios</h2>
-      <div class="user-table">
-        <table>
-          <thead>
-            <tr>
-              <th>ID Reservas</th>
-              <th>Cliente</th>
-              <th>Fecha</th>
-              <th>Tipo Plan</th>
-              <th>Nombre Plan</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="7" class="loading-message">Cargando reservas...</td>
-            </tr>
-            <tr v-else-if="reservas.length === 0">
-              <td colspan="7" class="empty-message">No hay reservas disponibles</td>
-            </tr>
-            <tr v-for="reserva in reservas" :key="reserva.id">
-              <td>{{ reserva.id }}</td>
-              <td>{{ reserva.usuario_id }}</td>
-              <td>{{ formatDate(reserva.fecha) }}</td>
-              <td>{{ reserva.tipo_Plan }}</td>
-              <td>{{ reserva.Detalle }}</td>
-              <td :class="{'estado-pagado': reserva.pagada, 'estado-pendiente': !reserva.pagada}">
-                {{ reserva.pagada ? '✔️ Pagada' : '❌ Pendiente' }}
-              </td>
-              <td>
-                <button @click="confirmarEliminar(reserva.id)" class="action-button delete">🗑️</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </nav>
-  </div>
-</template>
+	<div class="contpri">
+	  <button class="back-button" @click="volver">
+		<i class="fas fa-arrow-left"></i>
+		<span>Volver</span>
+	  </button>
+	  
+	  <div class="reservas-container">
+		<h2>Reservas de Usuarios</h2>
+		
+		<div class="table-responsive">
+		  <table>
+			<thead>
+			  <tr>
+				<th>ID Reserva</th>
+				<th>Cliente</th>
+				<th>Fecha</th>
+				<th>Tipo Plan</th>
+				<th>Nombre Plan</th>
+				<th>Estado</th>
+				<th>Acciones</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <tr v-if="loading">
+				<td colspan="7" class="loading-message">
+				  <i class="fas fa-spinner fa-spin"></i>
+				  <span>Cargando reservas...</span>
+				</td>
+			  </tr>
+			  <tr v-else-if="reservas.length === 0">
+				<td colspan="7" class="empty-message">
+				  <i class="far fa-calendar-times"></i>
+				  <p>No hay reservas disponibles</p>
+				</td>
+			  </tr>
+			  <tr v-for="reserva in reservas" :key="reserva.id">
+				<td data-label="ID Reserva">{{ reserva.id }}</td>
+				<td data-label="Cliente">{{ reserva.usuario_id }}</td>
+				<td data-label="Fecha">{{ formatDate(reserva.fecha) }}</td>
+				<td data-label="Tipo Plan">{{ reserva.tipo_Plan }}</td>
+				<td data-label="Nombre Plan">{{ reserva.Detalle }}</td>
+				<td data-label="Estado">
+				  <span :class="['status-badge', {'pagado': reserva.pagada, 'pendiente': !reserva.pagada}]">
+					<i :class="reserva.pagada ? 'fas fa-check-circle' : 'fas fa-clock'"></i>
+					{{ reserva.pagada ? 'Pagada' : 'Pendiente' }}
+				  </span>
+				</td>
+				<td data-label="Acciones">
+				  <button @click="confirmarEliminar(reserva.id)" class="action-button delete">
+					<i class="fas fa-trash-alt"></i>
+					<span>Eliminar</span>
+				  </button>
+				</td>
+			  </tr>
+			</tbody>
+		  </table>
+		</div>
+	  </div>
+	</div>
+  </template>
 
 <script>
 import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
+
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default {
   data() {
@@ -53,12 +74,23 @@ export default {
       error: null
     };
   },
+  setup() {
+    const router = useRouter();
+    
+    const volver = () => {
+      router.back();
+    };
+    
+    return {
+      volver
+    };
+  },
   methods: {
     async obtenerReservas() {
       this.loading = true;
       this.error = null;
       try {
-        const response = await fetch('/reservas/'); // Asegúrate de la ruta correcta
+        const response = await fetch('/reservas/');
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status}`);
         }
@@ -81,20 +113,21 @@ export default {
       const date = new Date(dateString);
       return date.toLocaleDateString('es-ES', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric'
       });
     },
     confirmarEliminar(id) {
       Swal.fire({
         title: '¿Estás seguro?',
-        text: "¡No podrás revertir esto!",
+        text: "Esta acción no se puede deshacer",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: '#ef233c',
+        cancelButtonColor: '#6c757d',
         confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
           this.eliminarReserva(id);
@@ -118,9 +151,12 @@ export default {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: 'La reserva ha sido eliminada.',
+          text: 'La reserva ha sido eliminada correctamente.',
           timer: 2000,
-          showConfirmButton: false
+          showConfirmButton: false,
+          background: '#f8f9fa',
+          position: 'top-end',
+          toast: true
         });
       } catch (error) {
         console.error('Error al eliminar la reserva:', error);
@@ -152,80 +188,159 @@ export default {
   --success: #4cc9f0;
   --warning: #f8961e;
   --danger: #ef233c;
-  --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --gray: #6c757d;
+  --light-gray: #e9ecef;
+  --transition: all 0.3s ease;
 }
 
 .contpri {
-  height: 100vh;
+  min-height: 100vh;
   font-family: 'Poppins', sans-serif;
   background-color: var(--light);
-  padding: 30px;
-}
-
-.reservas-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 30px auto;
-  background-color: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-h2 {
-  text-align: center;
-  color: var(--dark);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  margin-bottom: 30px;
-  font-size: 28px;
+  padding: 20px;
   position: relative;
 }
 
-h2::after {
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  background-color: var(--dark);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.back-button:hover {
+  background-color: var(--darker);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.back-button img {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.reservas-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 70px auto 30px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.reservas-container h2 {
+  text-align: center;
+  color: var(--dark);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  margin-bottom: 25px;
+  font-size: 24px;
+  position: relative;
+}
+
+.reservas-container h2::after {
   content: '';
   position: absolute;
-  bottom: -10px;
+  bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
+  width: 60px;
+  height: 3px;
   background: linear-gradient(to right, var(--primary), var(--accent));
   border-radius: 2px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  overflow: hidden;
-  border-radius: 8px;
+  min-width: 600px;
 }
 
 th, td {
-  padding: 15px;
+  padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--light-gray);
 }
 
 th {
   background-color: var(--dark);
-  color: #333;
-  font-weight: 600;
-  text-transform: uppercase;
+  color: white;
+  font-weight: 500;
   font-size: 14px;
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-tr:hover {
-  background-color: rgba(67, 97, 238, 0.05);
+tr:not(:last-child) {
+  border-bottom: 1px solid var(--light-gray);
 }
 
-.loading-message, .empty-message {
+tr:hover {
+  background-color: rgba(67, 97, 238, 0.03);
+}
+
+.loading-message {
   text-align: center;
-  padding: 20px;
-  color: var(--dark);
-  font-style: italic;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(67, 97, 238, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.empty-message img {
+  width: 100px;
+  height: 100px;
+  opacity: 0.7;
+}
+
+.empty-message p {
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 .action-button {
@@ -233,11 +348,12 @@ tr:hover {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
 }
 
 .delete {
@@ -248,37 +364,143 @@ tr:hover {
 .delete:hover {
   background-color: #d91e37;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.estado-pagado {
+.action-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.estado-pagado .status-badge {
+  background-color: rgba(76, 201, 240, 0.1);
   color: var(--success);
-  font-weight: 600;
 }
 
-.estado-pendiente {
+.estado-pendiente .status-badge {
+  background-color: rgba(248, 150, 30, 0.1);
   color: var(--warning);
-  font-weight: 600;
 }
 
-@media (max-width: 768px) {
+/* Responsive Styles */
+@media (max-width: 992px) {
   .reservas-container {
-    width: 95%;
-    padding: 20px 15px;
+    padding: 20px;
   }
   
   th, td {
-    padding: 10px 8px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contpri {
+    padding: 15px;
+  }
+  
+  .back-button {
+    top: 15px;
+    left: 15px;
+    padding: 8px 12px;
     font-size: 14px;
   }
   
-  .action-button {
-    padding: 6px 10px;
-    font-size: 12px;
+  .reservas-container {
+    margin-top: 60px;
+    width: 100%;
+    padding: 15px;
   }
   
-  h2 {
-    font-size: 24px;
+  .reservas-container h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    min-width: 100%;
+  }
+  
+  /* Stacked table for mobile */
+  @media (max-width: 576px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+    
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+    
+    tr {
+      margin-bottom: 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: 8px;
+      padding: 10px;
+      position: relative;
+    }
+    
+    td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+      text-align: right;
+    }
+    
+    td:before {
+      position: absolute;
+      left: 15px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      text-align: left;
+      font-weight: 600;
+      content: attr(data-label);
+    }
+    
+    td:last-child {
+      border-bottom: 0;
+      text-align: center;
+      padding-left: 15px;
+    }
+    
+    .action-button {
+      margin: 0 auto;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .back-button span {
+    display: none;
+  }
+  
+  .back-button {
+    padding: 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+  
+  .empty-message img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .loading-spinner {
+    width: 30px;
+    height: 30px;
   }
 }
 </style>
