@@ -95,7 +95,7 @@ export default {
     async cargarUsuarios() {
       this.loading = true;
       try {
-        const response = await api.get("/usuarios");
+        const response = await api.get("https://backfinal-production-c704.up.railway.app/usuarios/");
         this.users = response.data;
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
