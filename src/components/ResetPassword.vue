@@ -14,6 +14,7 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue"; // Importa ref para manejar el estado
 import api from "@/axiosConfig";
+import Swal from 'sweetalert2'; // Asegúrate de tener SweetAlert2 instalado
 
 export default {
   setup() {
