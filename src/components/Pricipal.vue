@@ -472,70 +472,101 @@ onBeforeUnmount(() => {
 
 		<!-- Sección de Eventos -->
 		<section class="events-section">
-			<div class="container">
-				<h1 class="heading-1 scroll-animate">Próximos Eventos</h1>
-				<div class="events-container">
-					<!-- Evento 1 -->
-					<div class="event-card scroll-animate scroll-delay-1">
-						<div class="event-date">
-							<span class="event-day">15</span>
-							<span class="event-month">JUN</span>
-						</div>
-						<div class="event-info">
-							<h3 class="event-title">Noche de Vinos</h3>
-							<p class="event-description">Degustación de los mejores vinos nacionales acompañados de
-								platillos especiales.</p>
-							<div class="event-meta">
-								<span class="event-time">⏰ 7:00 PM - 11:00 PM</span>
-								<span class="event-price">💲 $120.000 por persona</span>
-							</div>
-							<router-link v-if="token" to="/Eventos" class="event-button">Reservar</router-link>
-							<button v-else class="event-button" @click="redirigirALogin">Inicia sesión</button>
-						</div>
-					</div>
+    <div class="container">
+      <h1 class="heading-1 scroll-animate">Próximos Eventos</h1>
+      <div class="events-container">
+        <!-- Evento 1 -->
+        <div class="event-card scroll-animate scroll-delay-1">
+          <div class="event-date">
+            <span class="event-day">15</span>
+            <span class="event-month">JUN</span>
+          </div>
+          <div class="event-info">
+            <h3 class="event-title">Noche de Vinos</h3>
+            <p class="event-description">Degustación de los mejores vinos nacionales acompañados de platillos especiales.</p>
+            <div class="event-meta">
+              <span class="event-time">
+                <font-awesome-icon icon="fa-solid fa-clock" />
+                <span>7:00 PM - 11:00 PM</span>
+              </span>
+              <span class="event-price">
+                <font-awesome-icon icon="fa-solid fa-tag" />
+                <span>$120.000 por persona</span>
+              </span>
+            </div>
+            <router-link v-if="token" to="/Eventos" class="event-button">
+              <font-awesome-icon icon="fa-solid fa-calendar-check" />
+              <span>Reservar</span>
+            </router-link>
+            <button v-else class="event-button" @click="redirigirALogin">
+              <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
+              <span>Inicia sesión</span>
+            </button>
+          </div>
+        </div>
 
-					<!-- Evento 2 -->
-					<div class="event-card scroll-animate scroll-delay-2">
-						<div class="event-date">
-							<span class="event-day">22</span>
-							<span class="event-month">JUN</span>
-						</div>
-						<div class="event-info">
-							<h3 class="event-title">Taller de Cocina</h3>
-							<p class="event-description">Aprende las técnicas básicas de cocina con nuestro chef
-								ejecutivo.
-							</p>
-							<div class="event-meta">
-								<span class="event-time">⏰ 10:00 AM - 2:00 PM</span>
-								<span class="event-price">💲 $80.000 por persona</span>
-							</div>
-							<router-link v-if="token" to="/Eventos" class="event-button">Reservar</router-link>
-							<button v-else class="event-button" @click="redirigirALogin">Inicia sesión</button>
-						</div>
-					</div>
+        <!-- Evento 2 -->
+        <div class="event-card scroll-animate scroll-delay-2">
+          <div class="event-date">
+            <span class="event-day">22</span>
+            <span class="event-month">JUN</span>
+          </div>
+          <div class="event-info">
+            <h3 class="event-title">Taller de Cocina</h3>
+            <p class="event-description">Aprende las técnicas básicas de cocina con nuestro chef ejecutivo.</p>
+            <div class="event-meta">
+              <span class="event-time">
+                <font-awesome-icon icon="fa-solid fa-clock" />
+                <span>10:00 AM - 2:00 PM</span>
+              </span>
+              <span class="event-price">
+                <font-awesome-icon icon="fa-solid fa-tag" />
+                <span>$80.000 por persona</span>
+              </span>
+            </div>
+            <router-link v-if="token" to="/Eventos" class="event-button">
+              <font-awesome-icon icon="fa-solid fa-calendar-check" />
+              <span>Reservar</span>
+            </router-link>
+            <button v-else class="event-button" @click="redirigirALogin">
+              <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
+              <span>Inicia sesión</span>
+            </button>
+          </div>
+        </div>
 
-					<!-- Evento 3 -->
-					<div class="event-card scroll-animate scroll-delay-3">
-						<div class="event-date">
-							<span class="event-day">30</span>
-							<span class="event-month">JUN</span>
-						</div>
-						<div class="event-info">
-							<h3 class="event-title">Cena Romántica</h3>
-							<p class="event-description">Menú especial para parejas con música en vivo y ambiente
-								íntimo.
-							</p>
-							<div class="event-meta">
-								<span class="event-time">⏰ 6:00 PM - 12:00 AM</span>
-								<span class="event-price">💲 $150.000 por pareja</span>
-							</div>
-							<router-link v-if="token" to="/Eventos" class="event-button">Reservar</router-link>
-							<button v-else class="event-button" @click="redirigirALogin">Inicia sesión</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+        <!-- Evento 3 -->
+        <div class="event-card scroll-animate scroll-delay-3">
+          <div class="event-date">
+            <span class="event-day">30</span>
+            <span class="event-month">JUN</span>
+          </div>
+          <div class="event-info">
+            <h3 class="event-title">Cena Romántica</h3>
+            <p class="event-description">Menú especial para parejas con música en vivo y ambiente íntimo.</p>
+            <div class="event-meta">
+              <span class="event-time">
+                <font-awesome-icon icon="fa-solid fa-clock" />
+                <span>6:00 PM - 12:00 AM</span>
+              </span>
+              <span class="event-price">
+                <font-awesome-icon icon="fa-solid fa-tag" />
+                <span>$150.000 por pareja</span>
+              </span>
+            </div>
+            <router-link v-if="token" to="/Eventos" class="event-button">
+              <font-awesome-icon icon="fa-solid fa-calendar-check" />
+              <span>Reservar</span>
+            </router-link>
+            <button v-else class="event-button" @click="redirigirALogin">
+              <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
+              <span>Inicia sesión</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 		<!-- Sección de Blog -->
 		<section class="blog-section">
@@ -1148,9 +1179,9 @@ nav ul {
 }
 
 .container {
-	max-width: 1200px;
 	margin: 0 auto;
 	padding: 14px;
+	width: 100%;
 }
 
 
@@ -1425,41 +1456,42 @@ nav ul {
 
 /* Estilos para la sección de eventos */
 .events-section {
-	padding: 40px;
-	background-color: #f9f5f04f;
+  padding: 4rem 1rem;
+  background-color: #f9f5f0;
 }
 
 .events-container {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-	gap: 2rem;
-	margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .event-card {
-	display: flex;
-	background: white;
-	border-radius: var(--border-radius);
-	overflow: hidden;
-	box-shadow: var(--shadow-sm);
-	transition: var(--transition);
-	width: 100%;
+  display: flex;
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  flex-direction: column;
 }
 
 .event-card:hover {
-	transform: translateY(-5px);
-	box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+/* Fecha del evento */
 .event-date {
-	min-width: 80px;
-	background: linear-gradient(to bottom, var(--primary), var(--accent));
-	color: white;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 1rem;
+  background: linear-gradient(to bottom, var(--primary), var(--accent));
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
 }
 
 .event-day {
@@ -2235,21 +2267,28 @@ nav ul {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.event-card {
-		flex-direction: column;
-	}
-
-	.event-date {
-		flex-direction: row;
-		justify-content: center;
-		gap: 1rem;
-		padding: 0.5rem;
-	}
-
-	.event-day,
-	.event-month {
-		display: inline-block;
-	}
+	.events-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .event-card {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .event-date {
+    min-width: 80px;
+    height: 100%;
+    padding: 1rem 0.5rem;
+  }
+  
+  .event-info {
+    padding: 1rem;
+  }
+  
+  .heading-1 {
+    font-size: 2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2306,7 +2345,43 @@ nav ul {
 	.footer-legal {
 		flex-direction: column;
 		gap: 0.5rem;
+	
 	}
+
+	.events-section {
+    padding: 3rem 0.5rem;
+  }
+  
+  .event-card {
+    flex-direction: column;
+  }
+  
+  .event-date {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+  
+  .event-day,
+  .event-month {
+    display: inline-block;
+  }
+  
+  .event-day {
+    font-size: 1.5rem;
+  }
+  
+  .event-button {
+    width: 100%;
+    padding: 0.7rem;
+  }
+  
+  .heading-1 {
+    font-size: 1.8rem;
+  }
+
 }
 
 @media (max-width: 465px) {

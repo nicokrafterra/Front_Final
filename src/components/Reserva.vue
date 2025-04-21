@@ -537,4 +537,9 @@ button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+button:disabled:hover {
+	background-color: #6B8E23;
+	color: var(--blanco);
+	transform: none;
+}
 </style>
