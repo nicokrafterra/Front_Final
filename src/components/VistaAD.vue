@@ -204,11 +204,18 @@ export default {
       imgen: null
     });
 
-    const imagenPerfil = computed(() => {
-      return usuario.value.imagen
-        ? `http://localhost:8000/${usuario.value.imagen}`
-        : getImageUrl('default-avatar.jpg');
-    });
+	const imagenPerfil = computed(() => {
+  const imagen = store.state.usuario?.imagen;
+
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  
+  if (imagen) {
+	return `${baseUrl}/${imagen}`;
+  } else {
+	return imagenPorDefecto.value; // Retorna la imagen por defecto si no hay imagen en el store
+  }
+
+});
 
     return {
       sidebarCollapsed,
