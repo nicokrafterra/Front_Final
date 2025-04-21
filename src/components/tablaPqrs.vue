@@ -1,10 +1,5 @@
 <template>
   <div class="contpri">
-    <button class="back-button" @click="volver">
-      <i class="fas fa-arrow-left"></i>
-      <span>Volver</span>
-    </button>
-    
     <div class="tabla-pqrs">
       <h2>PQRS Recibidos</h2>
       

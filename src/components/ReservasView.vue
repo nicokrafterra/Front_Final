@@ -1,10 +1,5 @@
 <template>
 	<div class="contpri">
-	  <button class="back-button" @click="volver">
-		<i class="fas fa-arrow-left"></i>
-		<span>Volver</span>
-	  </button>
-	  
 	  <div class="reservas-container">
 		<h2>Reservas de Usuarios</h2>
 		

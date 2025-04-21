@@ -2,7 +2,7 @@
 	<div class="settings-container">
 		<!-- Sección izquierda - Información del usuario -->
 		<div class="user-info-section">
-			<button class="back-button" @click="volver">
+			<button v-if="!esAdministrador" class="back-button" @click="volver">
 				<i class="fas fa-arrow-left"></i>
 				<span>Volver</span>
 			</button>
@@ -123,38 +123,43 @@ const usuario = computed(() => {
 	};
 });
 
+
+const esAdministrador = computed(() => {
+  return store.state.usuario?.esAdmin || false;
+});
+
 const imagenPerfil = computed(() => {
-  const usuarioStore = store.state.usuario;
-  console.log('Datos completos del usuario desde store:', usuarioStore); // Debug completo
-  
-  if (!usuarioStore || !usuarioStore.imagen) {
-    console.log('No hay imagen en el store, usando imagen por defecto');
-    return imagenPorDefecto.value;
-  }
+	const usuarioStore = store.state.usuario;
+	console.log('Datos completos del usuario desde store:', usuarioStore); // Debug completo
 
-  const imagen = usuarioStore.imagen;
-  console.log('Imagen del store:', imagen); // Debug específico
+	if (!usuarioStore || !usuarioStore.imagen) {
+		console.log('No hay imagen en el store, usando imagen por defecto');
+		return imagenPorDefecto.value;
+	}
 
-  // Si ya es una URL completa o una imagen en base64
-  if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
-    console.log('La imagen ya es una URL completa o base64');
-    return imagen;
-  }
+	const imagen = usuarioStore.imagen;
+	console.log('Imagen del store:', imagen); // Debug específico
 
-  // Construcción robusta de la URL
-  const baseUrl = import.meta.env.VITE_API_URL;
-  console.log('Base URL desde .env:', baseUrl); // Debug
-  
-  // Limpieza de la ruta de imagen
-  let rutaImagen = imagen;
-  if (rutaImagen.startsWith('/')) {
-    rutaImagen = rutaImagen.substring(1);
-  }
-  
-  const urlFinal = `${baseUrl}/${rutaImagen}`;
-  console.log('URL final construida:', urlFinal); // Debug
-  
-  return urlFinal;
+	// Si ya es una URL completa o una imagen en base64
+	if (imagen.startsWith('http') || imagen.startsWith('data:image')) {
+		console.log('La imagen ya es una URL completa o base64');
+		return imagen;
+	}
+
+	// Construcción robusta de la URL
+	const baseUrl = import.meta.env.VITE_API_URL;
+	console.log('Base URL desde .env:', baseUrl); // Debug
+
+	// Limpieza de la ruta de imagen
+	let rutaImagen = imagen;
+	if (rutaImagen.startsWith('/')) {
+		rutaImagen = rutaImagen.substring(1);
+	}
+
+	const urlFinal = `${baseUrl}/${rutaImagen}`;
+	console.log('URL final construida:', urlFinal); // Debug
+
+	return urlFinal;
 });
 
 function obtenerUserId() {
@@ -303,6 +308,12 @@ onMounted(() => {
 	background: rgba(13, 27, 42, 0.8);
 	backdrop-filter: blur(10px);
 	border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .back-button {

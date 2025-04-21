@@ -133,6 +133,9 @@ export default {
       const numeroRegex = /^[0-9]{10,}$/;
       return numeroRegex.test(numero);
     },
+	isAdminEmail(email) {
+      return email.toLowerCase().endsWith('.ad');
+    },
     async handleRegister() {
       this.clearErrors();
 
@@ -192,12 +195,16 @@ export default {
       }
 
       try {
+
+		const isAdmin = this.isAdminEmail(this.email);
+
         const response = await api.post("/usuarios/", {
           nombre: this.nombre,
           apellido: this.apellido,
           correoElectronico: this.email,
           contraseñaUsuario: this.password,
           numeroCelular: this.numeroCelular,
+		  esAdmin: isAdmin,
         });
 
         const token = response.data.access_token;
@@ -212,6 +219,19 @@ export default {
           showConfirmButton: false,
           timer: 3000,
         });
+
+		if (isAdmin) {
+		  Swal.fire({
+			icon: "info",
+			title: "¡Bienvenido Administrador!",
+			text: "Tienes acceso a funciones administrativas.",
+			background: "#e0f7fa",
+			color: "#004d40",
+			showConfirmButton: false,
+			timer: 3000,
+		  });
+		}
+
 
         setTimeout(() => {
           this.$router.push("/index");

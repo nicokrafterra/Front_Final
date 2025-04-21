@@ -1,8 +1,5 @@
 <template>
 	<div class="contpri">
-		<button class="back-button" @click="volver">
-			<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
-		</button>
 		<div class="form">
 			<h2>Añadir Plan</h2>
 			<form @submit.prevent="agregarPlan">

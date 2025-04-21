@@ -29,12 +29,15 @@ watch(() => store.state.usuario?.imagen, (nuevaImagen, imagenAnterior) => {
 
 const imagenPerfil = computed(() => {
   const imagen = store.state.usuario?.imagen;
-  
-  if (!imagen) return imagenPorDefecto.value;
-  
+
   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
   
-  return `${baseUrl}/${imagen}?t=${Date.now()}`;
+  if (imagen) {
+	return `${baseUrl}/${imagen}`;
+  } else {
+	return imagenPorDefecto.value; // Retorna la imagen por defecto si no hay imagen en el store
+  }
+
 });
 
 // Observar cambios en el store para la imagen del usuario
