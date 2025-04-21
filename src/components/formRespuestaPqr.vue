@@ -8,6 +8,7 @@
 </template>
 
 <script setup>
+import api from '@/axiosConfig';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -15,29 +16,22 @@ const props = defineProps({
   pqr: Object
 });
 
-
 const emit = defineEmits();
-
 const respuesta = ref('');
 
 const enviarRespuesta = async () => {
   try {
-    const response = await fetch(`/pqrs/${props.pqr.id}/respuesta`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ respuesta: respuesta.value }) 
+    await api.put(`/pqrs/${props.pqr.id}/respuesta`, {
+      respuesta: respuesta.value
     });
 
-    if (!response.ok) throw new Error("Error al responder PQR");
+    Swal.fire({
+      title: 'Éxito!',
+      text: 'Respuesta enviada con éxito.',
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    });
 
-	Swal.fire({
-			title: 'Éxito!',
-			text: 'Respuesta enviada con éxito.',
-			icon: 'success',
-			confirmButtonText: 'Aceptar'
-		  });
     respuesta.value = '';
     emit('close'); 
   } catch (error) {
@@ -45,6 +39,7 @@ const enviarRespuesta = async () => {
   }
 };
 </script>
+
 
 
 <style scoped>

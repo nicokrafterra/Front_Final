@@ -64,6 +64,7 @@
 import { ref, onMounted } from 'vue';
 import formRespuestaPqr from './formRespuestaPqr.vue';
 import { useRouter } from 'vue-router';
+import api from '@/axiosConfig'; // ✅ Asegúrate de tener este archivo configurado
 
 // Importar Font Awesome
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -73,26 +74,30 @@ const pqrs = ref([]);
 const pqrSeleccionado = ref(null);
 const loading = ref(true);
 
+// 🔹 Volver atrás
 const volver = () => {
   router.back();
 };
 
+// 🔹 Obtener la lista de PQRs usando Axios
 const obtenerPqrs = async () => {
   loading.value = true;
   try {
-    const response = await fetch("/pqrs/");
-    pqrs.value = await response.json();
+    const response = await api.get("/pqrs/");
+    pqrs.value = response.data;
   } catch (error) {
-    console.error("Error al obtener PQRS:", error);
+    console.error("❌ Error al obtener PQRS:", error);
   } finally {
     loading.value = false;
   }
 };
 
+// 🔹 Seleccionar PQR para responder
 const responderPqr = (pqr) => {
   pqrSeleccionado.value = pqr;
 };
 
+// 🔹 Refrescar la lista y limpiar selección
 const actualizarLista = () => {
   obtenerPqrs();
   pqrSeleccionado.value = null;
@@ -100,6 +105,7 @@ const actualizarLista = () => {
 
 onMounted(obtenerPqrs);
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
@@ -229,7 +235,7 @@ tr:hover {
 
 .btn-responder {
   padding: 8px 12px;
-  background-color: var(--success);
+  background-color: #4095f6;
   color: white;
   border: none;
   border-radius: 6px;

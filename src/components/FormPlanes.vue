@@ -16,7 +16,7 @@
 						required
 						min="1"
 						max="1000"
-						placeholder="Cantidad máxima de participantes"
+						placeholder="Cantidad máxima disponible"
 					/>
 				</div>
 				<div class="form-group">
@@ -81,16 +81,122 @@ const agregarPlan = async () => {
 	try {
 		const response = await api.post("/planes", planData);
 
-		if (!response.ok) {
-			throw new Error("Error al agregar el plan");
-		} else {
+		// Manejo de la respuesta
+		// Aquí puedes manejar la respuesta según el código de estado
+		if (response.status === 200) {
 			Swal.fire({
 				icon: "success",
-				title: "¡Plan añadido con éxito!",
-				text: "El plan ha sido registrado correctamente.",
+				title: "Plan Añadido",
+				text: "El plan ha sido añadido exitosamente.",
 				confirmButtonText: "Aceptar",
 			});
 			limpiarFormulario();
+		}
+		else if (response.status === 201) {
+			Swal.fire({
+				icon: "success",
+				title: "Plan Creado",
+				text: "El plan ha sido creado exitosamente.",
+				confirmButtonText: "Aceptar",
+			});
+			limpiarFormulario();
+		}
+		else if (response.status === 409) {
+			Swal.fire({
+				icon: "error",
+				title: "Conflicto",
+				text: "El plan ya existe.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 422) {
+			Swal.fire({
+				icon: "error",
+				title: "Error de Validación",
+				text: "Los datos proporcionados son inválidos.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 403) {
+			Swal.fire({
+				icon: "error",
+				title: "Acceso Denegado",
+				text: "No tienes permiso para añadir un plan.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 401) {	
+			Swal.fire({
+				icon: "error",
+				title: "Sesión Expirada",
+				text: "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 404) {
+			Swal.fire({
+				icon: "error",
+				title: "No Encontrado",
+				text: "El recurso solicitado no fue encontrado.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 409) {
+			Swal.fire({
+				icon: "error",
+				title: "Conflicto",
+				text: "El plan ya existe.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 422) {
+			Swal.fire({
+				icon: "error",
+				title: "Error de Validación",
+				text: "Los datos proporcionados son inválidos.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 400) {
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "El plan ya existe o los datos son inválidos.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 500) {
+			Swal.fire({
+				icon: "error",
+				title: "Error del servidor",
+				text: "Ocurrió un error en el servidor. Por favor, inténtalo más tarde.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 403) {
+			Swal.fire({
+				icon: "error",
+				title: "Acceso Denegado",
+				text: "No tienes permiso para añadir un plan.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		else if (response.status === 401) {	
+			Swal.fire({
+				icon: "error",
+				title: "Sesión Expirada",
+				text: "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
+				confirmButtonText: "Aceptar",
+			});
+		}
+		 else {
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "No se pudo añadir el plan. Por favor, inténtalo de nuevo.",
+				confirmButtonText: "Aceptar",
+			});
+			
 		}
 	} catch (error) {
 		Swal.fire({

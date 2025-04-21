@@ -8,7 +8,7 @@
     <div class="reservas-container">
       <h2>Mis Reservas</h2>
       
-      <div class="table-responsive" v-if="reservas > 0">
+      <div class="table-responsive" v-if="reservas.length > 0">
         <table>
           <thead>
             <tr>
@@ -56,7 +56,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
@@ -67,9 +66,7 @@ const store = useStore();
 const router = useRouter();
 const reservas = ref([]);
 
-// Computed que obtiene el ID del usuario:
-// Primero, intenta usar el usuario almacenado en Vuex.
-// Si no existe, intenta decodificar el token JWT y usa el campo "sub".
+// Computed que obtiene el ID del usuario
 const usuarioId = computed(() => {
   if (store.state.usuario && store.state.usuario.id) {
     return store.state.usuario.id;
@@ -78,7 +75,7 @@ const usuarioId = computed(() => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        return decoded.sub; // Asegúrate de que en el token se usa "sub" para el id
+        return decoded.sub;
       } catch (error) {
         console.error('Error al decodificar el token:', error);
         return null;
@@ -89,81 +86,115 @@ const usuarioId = computed(() => {
 });
 
 const volver = () => {
-	router.back();
+  router.push('/Reservas');
 };
 
 const obtenerReservas = async () => {
-	try {
-		const token = localStorage.getItem('token');
-		if (!token) {
-			throw new Error("No hay token disponible, inicia sesión.");
-		}
-		if (!usuarioId.value) {
-			throw new Error("No se pudo obtener el ID del usuario.");
-		}
+  console.log("ID del usuario:", usuarioId.value);
 
-		const response = await api.get(`/reservas/${usuarioId.value}/user`, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
-		reservas.value = response.data;
-	} catch (error) {
-		console.error("Error al obtener las reservas:", error.response ? error.response.data : error.message);
-	}
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Token no encontrado',
+        text: 'Por favor inicia sesión.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    if (!usuarioId.value) {
+      Swal.fire({
+        icon: 'error',
+        title: 'ID no encontrado',
+        text: 'No se pudo obtener el ID del usuario.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    const response = await api.get(`/reservas/${usuarioId.value}/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    reservas.value = response.data;
+  } catch (error) {
+    console.error("Error al obtener las reservas:", error.response ? error.response.data : error.message);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.response?.data?.detail || 'No se pudieron obtener las reservas.',
+      confirmButtonText: 'Aceptar'
+    });
+  }
 };
 
 const pagarReserva = async (id) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("No hay token disponible, inicia sesión.");
 
-		const token = localStorage.getItem('token');
-		if (!token) throw new Error("No hay token disponible, inicia sesión.");
-		const response = await api.post(`/reservas/${id}/pagar`, null, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
-		if (response.status === 200) {
-			const updatedReserva = response.data;
-			const index = reservas.value.findIndex(reserva => reserva.id === id);
-			if (index !== -1) {
-				reservas.value[index] = updatedReserva;
-			}
-			
-		}
+    const response = await api.post(`/reservas/${id}/pagar`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
+    if (response.status === 200) {
+      const updatedReserva = response.data;
+      const index = reservas.value.findIndex(reserva => reserva.id === id);
+      if (index !== -1) {
+        reservas.value[index] = updatedReserva;
+      }
+    }
+  } catch (error) {
+    console.error("Error al pagar la reserva:", error.response ? error.response.data : error.message);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al pagar',
+      text: error.response?.data?.detail || 'Hubo un problema al pagar la reserva.',
+      confirmButtonText: 'Aceptar'
+    });
+  }
 };
 
 const eliminarReserva = async (id) => {
-	try {
-		const token = localStorage.getItem('token');
-		if (!token) throw new Error("No hay token disponible, inicia sesión.");
-		const response = await api.delete(`/reservas/${id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
-		if (response.status === 200) {
-			reservas.value = reservas.value.filter(reserva => reserva.id !== id);
-			Swal.fire({
-				icon: 'success',
-				title: 'Reserva eliminada',
-				text: 'Tu reserva ha sido eliminada exitosamente.',
-				confirmButtonText: 'Aceptar'
-			});
-		}
-	} catch (error) {
-		Swal.fire({
-			icon: 'error',
-			title: 'Error',
-			text: 'Hubo un problema al intentar eliminar la reserva.',
-			confirmButtonText: 'Aceptar'
-		});
-		console.error("Error al eliminar la reserva:", error.response ? error.response.data : error.message);
-	}
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("No hay token disponible, inicia sesión.");
+
+    const response = await api.delete(`/reservas/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 200) {
+      reservas.value = reservas.value.filter(reserva => reserva.id !== id);
+      Swal.fire({
+        icon: 'success',
+        title: 'Reserva eliminada',
+        text: 'Tu reserva ha sido eliminada exitosamente.',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.response?.data?.detail || 'Hubo un problema al intentar eliminar la reserva.',
+      confirmButtonText: 'Aceptar'
+    });
+    console.error("Error al eliminar la reserva:", error.response ? error.response.data : error.message);
+  }
 };
 
 onMounted(obtenerReservas);
 </script>
+
 
 
 

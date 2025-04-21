@@ -27,6 +27,8 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { jwtDecode } from 'jwt-decode';
+import Swal from 'sweetalert2';
+import api from '@/axiosConfig'; // Asegúrate de tener configurado este archivo
 
 const correo = ref('');
 const descripcion = ref('');
@@ -46,10 +48,10 @@ const obtenerUsuarioDesdeJWT = () => {
 
 	try {
 		const decodedToken = jwtDecode(token);
-		console.log('🔍 Token decodificado:', decodedToken); // 👉 Depuración
+		console.log('🔍 Token decodificado:', decodedToken);
 
 		if (!decodedToken.sub) {
-			console.error('⚠️ El token no contiene "user_id". Verifica la estructura del token.');
+			console.error('⚠️ El token no contiene "sub".');
 			return;
 		}
 
@@ -59,10 +61,14 @@ const obtenerUsuarioDesdeJWT = () => {
 	}
 };
 
-// 🔹 Enviar PQR con JWT
+// 🔹 Enviar PQR usando Axios
 const enviarPqr = async () => {
 	if (!usuarioId.value) {
-		mensaje.value = 'Error: No se pudo obtener la información del usuario. Inicia sesión nuevamente.';
+		Swal.fire({
+			icon: 'error',
+			title: 'Sesión inválida',
+			text: 'Por favor, inicia sesión nuevamente.',
+		});
 		return;
 	}
 
@@ -73,38 +79,42 @@ const enviarPqr = async () => {
 	};
 
 	try {
-		const response = await fetch('/pqr/', {
-			method: 'POST',
+		await api.post('/pqr/', pqrData, {
 			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`, // 🔹 Token JWT en la cabecera
-			},
-			body: JSON.stringify(pqrData),
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}
 		});
 
-		if (!response.ok) {
-			throw new Error('Error al enviar el PQR');
-		}
+		Swal.fire({
+			icon: 'success',
+			title: 'PQR enviado',
+			text: 'Tu petición fue enviada exitosamente.',
+		});
 
-		mensaje.value = '✅ PQR enviado exitosamente';
 		correo.value = '';
 		descripcion.value = '';
+		mensaje.value = '';
 	} catch (error) {
-		console.error('Error:', error);
-		mensaje.value = '❌ No se pudo enviar el PQR. Intenta nuevamente.';
+		console.error('❌ Error al enviar el PQR:', error);
+		Swal.fire({
+			icon: 'error',
+			title: 'Error',
+			text: 'No se pudo enviar el PQR. Intenta nuevamente.',
+		});
 	}
 };
 
-// 🔹 Recuperar el ID del usuario cuando se monta el componente
+// 🔹 Cargar ID de usuario al montar
 onMounted(() => {
 	obtenerUsuarioDesdeJWT();
 });
 
-// 🔹 Función para volver atrás
+// 🔹 Volver atrás
 const volver = () => {
-	router.go(-1);
+	router.back();
 };
 </script>
+
 
 
 <style scoped>

@@ -58,7 +58,7 @@
 <script>
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
-
+import api from '@/axiosConfig'; // ✅ Importa tu configuración de Axios
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default {
@@ -85,14 +85,10 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const response = await fetch('/reservas/');
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
-        const data = await response.json();
-        this.reservas = data;
+        const response = await api.get('/reservas/');
+        this.reservas = response.data;
       } catch (error) {
-        console.error('Error al obtener las reservas:', error);
+        console.error('❌ Error al obtener las reservas:', error);
         this.error = error.message;
         Swal.fire({
           icon: 'error',
@@ -131,16 +127,7 @@ export default {
     },
     async eliminarReserva(id) {
       try {
-        const response = await fetch(`/reservas/${id}/`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
+        await api.delete(`/reservas/${id}/`);
         
         this.reservas = this.reservas.filter((reserva) => reserva.id !== id);
         Swal.fire({
@@ -154,7 +141,7 @@ export default {
           toast: true
         });
       } catch (error) {
-        console.error('Error al eliminar la reserva:', error);
+        console.error('❌ Error al eliminar la reserva:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -168,6 +155,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
