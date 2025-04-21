@@ -2449,12 +2449,6 @@ nav ul {
     grid-template-columns: 1fr;
   }
   
-  /* 6. Eventos */
-  .event-card {
-    padding: 1rem;
-		width: 85%;
-  }
-  
   .event-date {
     flex-direction: column;
     gap: 0.3rem;
