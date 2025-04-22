@@ -79,7 +79,7 @@ const agregarPlan = async () => {
 	loading.value = true;
 
 	try {
-		const response = await api.post("http://frontfinal-production.up.railway.app/planes", planData);
+		const response = await api.post("/planes", planData);
 
 		// Manejo de la respuesta
 		// Aquí puedes manejar la respuesta según el código de estado
