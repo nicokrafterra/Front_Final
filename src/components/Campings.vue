@@ -119,7 +119,7 @@ const hacerReserva = (camping) => {
 	});
 };
 
-onMounted(obtenirCamping);
+onMounted(obtenerCamping);
 </script>
 
 <style scoped>
