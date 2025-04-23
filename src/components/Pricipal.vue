@@ -309,7 +309,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="content-card-product">
 						<h3>Bagre frito</h3>
-						<p class="price">$4.60 <span>$5.30</span></p>
+						<p class="price">$24.600 <span>$20.000</span></p>
 						<router-link class="redirect-button" to="/Platos">Ver Plato</router-link>
 					</div>
 				</div>
