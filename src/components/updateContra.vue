@@ -183,6 +183,70 @@ h2 {
   margin-bottom: 30px;
   font-weight: 600;
   font-size: 24px;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   position: relative;
   padding-bottom: 15px;
   font-family: 'Quicksand', sans-serif;
@@ -216,7 +280,9 @@ label {
 input {
   width: 100%;
   padding: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+	
+	border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   color: white;
