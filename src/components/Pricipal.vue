@@ -138,7 +138,7 @@ onBeforeUnmount(() => {
 		</div>
 		<span class="navegar__Usuario">
 			<router-link class="icon-p scroll-animate scroll-delay-1" :to="token ? '/pqr' : '/Iniciar'">
-				<img class="icon" src="../assets/IMG/message.svg" alt="Mensaje" />
+				<img class="icon" src="../assets/IMG/message.svg" alt="Mensaje" title="Mensaje" />
 			</router-link>
 			<router-link class="icon-p scroll-animate scroll-delay-2" :to="token ? '/TablaPqrRes' : '/Iniciar'">
 				<img class="icon" src="../assets/IMG/notification.svg" alt="Notificación" />
