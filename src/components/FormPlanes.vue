@@ -8,18 +8,14 @@
 					<label>Imagen del Plan:</label>
 					<div class="image-preview-container">
 						<div class="image-preview">
-							<img v-if="imagePreview" :src="imagePreview" alt="Vista previa de la imagen" class="preview-image">
+							<img v-if="imagePreview" :src="imagePreview" alt="Vista previa de la imagen"
+								class="preview-image">
 							<i v-else class="fas fa-image placeholder-icon"></i>
 							<button type="button" class="upload-btn" @click="triggerFileInput">
 								<i class="fas fa-camera"></i>
 							</button>
-							<input 
-								type="file" 
-								ref="fileInput"
-								@change="handleImageUpload" 
-								accept="image/*"
-								style="display: none;"
-							/>
+							<input type="file" ref="fileInput" @change="handleImageUpload" accept="image/*"
+								style="display: none;" />
 						</div>
 						<button v-if="imagePreview" type="button" class="remove-btn" @click="removeImage">
 							<i class="fas fa-times"></i> Eliminar
@@ -29,35 +25,22 @@
 
 				<div class="form-group">
 					<label for="nombre">Nombre:</label>
-					<input v-model="planData.nombre" type="text" id="nombre" required maxlength="50" placeholder="Nombre del plan" />
+					<input v-model="planData.nombre" type="text" id="nombre" required maxlength="50"
+						placeholder="Nombre del plan" />
 				</div>
-				
+
 				<div class="form-group">
 					<label for="cantidad_maxima">Cantidad Máxima:</label>
-					<input
-						v-model.number="planData.cantidad_maxima"
-						type="number"
-						id="cantidad_maxima"
-						required
-						min="1"
-						max="1000"
-						placeholder="Cantidad máxima disponible"
-					/>
+					<input v-model.number="planData.cantidad_maxima" type="number" id="cantidad_maxima" required min="1"
+						max="1000" placeholder="Cantidad máxima disponible" />
 				</div>
-				
+
 				<div class="form-group">
 					<label for="precio">Precio:</label>
-					<input
-						v-model.number="planData.precio"
-						type="number"
-						id="precio"
-						required
-						min="0"
-						step="0.01"
-						placeholder="Precio del plan"
-					/>
+					<input v-model.number="planData.precio" type="number" id="precio" required min="0" step="0.01"
+						placeholder="Precio del plan" />
 				</div>
-				
+
 				<div class="form-group">
 					<label for="tipo">Tipo de Plan:</label>
 					<select v-model="planData.tipo" id="tipo" required>
@@ -68,18 +51,13 @@
 						<option value="Evento">Evento</option>
 					</select>
 				</div>
-				
+
 				<div class="form-group">
 					<label for="descripcion">Descripción:</label>
-					<textarea
-						v-model="planData.descripcion"
-						id="descripcion"
-						required
-						maxlength="500"
-						placeholder="Descripción del plan"
-					></textarea>
+					<textarea v-model="planData.descripcion" id="descripcion" required maxlength="500"
+						placeholder="Descripción del plan"></textarea>
 				</div>
-				
+
 				<div class="button-group">
 					<button type="submit" :disabled="loading" class="reserva-button">
 						{{ loading ? "Guardando..." : "Agregar Plan" }}
@@ -145,14 +123,14 @@ const removeImage = () => {
 
 const agregarPlan = async () => {
 	loading.value = true;
-	
+
 	try {
 		// Validación básica del cliente
-		if (!planData.value.nombre || !planData.value.descripcion || !planData.value.tipo || 
+		if (!planData.value.nombre || !planData.value.descripcion || !planData.value.tipo ||
 			!planData.value.cantidad_maxima || planData.value.precio === null) {
 			throw new Error("Por favor complete todos los campos requeridos");
 		}
-		
+
 		const formData = new FormData();
 		Object.entries(planData.value).forEach(([key, value]) => {
 			if (value !== null) {
@@ -164,18 +142,19 @@ const agregarPlan = async () => {
 				}
 			}
 		});
-		
+
 		const response = await api.post("/planes", formData, {
 			headers: {
-				'Content-Type': 'multipart/form-data'
+				'Content-Type': 'multipart/form-data',
+				'Authorization': `Bearer ${localStorage.getItem('token')}` // Si usas autenticación
 			}
 		});
-		
+
 		handleResponse(response.status);
-		
+
 	} catch (error) {
 		console.error("Error al agregar plan:", error);
-		
+
 		if (error.response) {
 			// Error de la API
 			handleResponse(error.response.status, error.response.data?.message);
@@ -205,20 +184,20 @@ const handleResponse = (status, customMessage = null) => {
 		422: { icon: "error", title: "Error de Validación", text: customMessage || "Por favor verifique los datos ingresados." },
 		500: { icon: "error", title: "Error del Servidor", text: "Ocurrió un error en el servidor. Por favor intente más tarde." }
 	};
-	
-	const response = messages[status] || { 
-		icon: "error", 
-		title: "Error", 
-		text: customMessage || "Ocurrió un error inesperado." 
+
+	const response = messages[status] || {
+		icon: "error",
+		title: "Error",
+		text: customMessage || "Ocurrió un error inesperado."
 	};
-	
+
 	Swal.fire({
 		icon: response.icon,
 		title: response.title,
 		text: response.text,
 		confirmButtonText: "Aceptar",
 	});
-	
+
 	if (status === 200 || status === 201) {
 		limpiarFormulario();
 	}
@@ -245,131 +224,135 @@ const verPlanes = () => {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
 .contpri {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--light);
-    position: relative;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'Poppins', sans-serif;
+	background-color: var(--light);
+	position: relative;
 }
 
 .back-button {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    padding: 12px 20px;
-    background-color: var(--dark);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+	position: absolute;
+	top: 30px;
+	left: 30px;
+	padding: 12px 20px;
+	background-color: var(--dark);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: var(--transition);
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 10;
 }
 
 .back-button:hover {
-    background-color: var(--darker);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+	background-color: var(--darker);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .back-button img {
-    width: 20px;
-    height: 20px;
-    transition: var(--transition);
+	width: 20px;
+	height: 20px;
+	transition: var(--transition);
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 500px;
-    background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 500px;
+	background: white;
+	padding: 40px;
+	border-radius: 16px;
+	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+	position: relative;
+	overflow: hidden;
+	z-index: 1;
 }
 
 .form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background: linear-gradient(to right, var(--primary), var(--accent));
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 8px;
+	background: linear-gradient(to right, var(--primary), var(--accent));
 }
 
 .form-group {
-    margin-bottom: 25px;
-    position: relative;
+	margin-bottom: 25px;
+	position: relative;
 }
 
 label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--dark);
-    font-weight: 500;
-    font-size: 14px;
+	display: block;
+	margin-bottom: 8px;
+	color: var(--dark);
+	font-weight: 500;
+	font-size: 14px;
 }
 
-input, textarea, select {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
-    transition: var(--transition);
-    background-color: white;
-    color: var(--dark);
+input,
+textarea,
+select {
+	width: 100%;
+	padding: 14px 16px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	font-family: 'Poppins', sans-serif;
+	font-size: 15px;
+	transition: var(--transition);
+	background-color: white;
+	color: var(--dark);
 }
 
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--primary-light);
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: var(--primary-light);
+	box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
 }
 
 .reserva-button {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    margin-top: 10px;
-    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+	width: 100%;
+	padding: 16px;
+	background: linear-gradient(to right, var(--primary), var(--secondary));
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: var(--transition);
+	margin-top: 10px;
+	box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
 }
 
 .reserva-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
-    background: linear-gradient(to right, var(--primary-light), var(--primary));
+	transform: translateY(-2px);
+	box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+	background: linear-gradient(to right, var(--primary-light), var(--primary));
 }
 
 @media (max-width: 600px) {
-    .form {
-        padding: 30px 20px;
-        margin: 20px;
-    }
-    
-    .back-button {
-        top: 15px;
-        left: 15px;
-    }
+	.form {
+		padding: 30px 20px;
+		margin: 20px;
+	}
+
+	.back-button {
+		top: 15px;
+		left: 15px;
+	}
 }
 </style>
