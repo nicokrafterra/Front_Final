@@ -228,7 +228,7 @@ onMounted(obtenerReservas);
   top: 20px;
   left: 20px;
   padding: 10px 15px;
-  background-color: var(--marron-tierra);
+  background-color: #8B5A2B;
   color: white;
   border: none;
   border-radius: 8px;
@@ -243,7 +243,7 @@ onMounted(obtenerReservas);
 }
 
 .back-button:hover {
-  background-color: var(--rojo-terracota);
+  background-color: #a8380b;
   transform: translateY(-2px);
 }
 
@@ -329,7 +329,7 @@ tr:hover {
 }
 
 .pagar {
-  background-color: var(--verde-oliva);
+  background-color: #6B8E23;
   color: white;
   text-decoration: none;
 }
@@ -340,7 +340,7 @@ tr:hover {
 }
 
 .delete {
-  background-color: var(--rojo-terracota);
+  background-color: #C1440E;
   color: white;
 }
 

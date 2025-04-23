@@ -46,6 +46,9 @@ const volver = () => {
 	transition: 0.35s;
 	font-size: 24px;
 	color: #6B8E23; /* Verde Oliva */
+	background-color: #6B8E23;
+	padding: 5px	;
+	border-radius: 6px;
 }
 
 .back-button:hover {
