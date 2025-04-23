@@ -429,7 +429,7 @@ onBeforeUnmount(() => {
 		<section class="instagram-gallery">
 			<div class="container">
 				<h1 class="heading-1 scroll-animate">Síguenos en Instagram</h1>
-				<p class="instagram-subtitle scroll-animate scroll-delay-1">@RestauranteNombre</p>
+				<p class="instagram-subtitle scroll-animate scroll-delay-1">@Fogoness ;D</p>
 				<div class="gallery-grid">
 					<div class="gallery-item scroll-animate scroll-delay-1">
 						<img src="../assets/IMG/RestauranteInsta.jpg" alt="Instagram 1">
