@@ -98,6 +98,8 @@ const volver = () => {
 	border: none;
 	cursor: pointer;
 	transition: 0.35s;
+	background-color: #D4A017;
+	padding: 15px	;
 }
 
 .back-button:hover {
