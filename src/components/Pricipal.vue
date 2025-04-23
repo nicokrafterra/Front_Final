@@ -322,7 +322,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="content-card-product">
 						<h3>Lengua en salsa criolla</h3>
-						<p class="price">$5.70 <span>$7.30</span></p>
+						<p class="price">$25.700 <span>$23.000</span></p>
 						<router-link class="redirect-button" to="/Platos">Ver Plato</router-link>
 					</div>
 				</div>
@@ -335,7 +335,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="content-card-product">
 						<h3>Punta de anca</h3>
-						<p class="price">$3.85 <span>$5.50</span></p>
+						<p class="price">$23.700 <span>$22.500</span></p>
 						<router-link class="redirect-button" to="/Platos">Ver Plato</router-link>
 					</div>
 				</div>
@@ -348,7 +348,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="content-card-product">
 						<h3>Mojarra a la diabla</h3>
-						<p class="price">$5.60</p>
+						<p class="price">$25.600</p>
 						<router-link class="redirect-button" to="/Platos">Ver Plato</router-link>
 					</div>
 				</div>

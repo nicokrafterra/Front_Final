@@ -55,7 +55,6 @@ const router = useRouter();
 
 // Imágenes locales para los campings
 const campingsImages = [
-
 	camping1,
 	camping2,
 	camping3,
