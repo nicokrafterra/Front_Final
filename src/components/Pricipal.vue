@@ -139,11 +139,9 @@ onBeforeUnmount(() => {
 		<span class="navegar__Usuario">
 			<router-link class="icon-p scroll-animate scroll-delay-1" :to="token ? '/pqr' : '/Iniciar'">
 				<img class="icon" src="../assets/IMG/message.svg" alt="Mensaje" />
-				<p class="TextoHeader">PQRS</p>
 			</router-link>
 			<router-link class="icon-p scroll-animate scroll-delay-2" :to="token ? '/TablaPqrRes' : '/Iniciar'">
 				<img class="icon" src="../assets/IMG/notification.svg" alt="Notificación" />
-				<p class="TextoHeader">Respuestas</p>
 			</router-link>
 
 			<!-- Botón de Iniciar sesión si no hay token -->
@@ -965,10 +963,6 @@ header:hover {
 
 
 
-.icon-p{
-	display: flex;
-}
-
 .A-logo img {
 	height: 100%;
 	width: 100%;
@@ -1415,17 +1409,6 @@ nav ul {
 	height: 100%;
 	object-fit: cover;
 	transition: transform 0.5s ease;
-}
-
-.TextoHeader{
-	font-size: 10px;
-	text-align: center;
-	margin-bottom: 1rem;
-	color: #F5DEB3;
-}
-
-.TextoHeader:hover{
-	color: #D4A017;
 }
 
 .gallery-overlay {
