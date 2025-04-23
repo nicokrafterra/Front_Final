@@ -2,24 +2,30 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
+  withCredentials: false, // Cambia a true si usas cookies
+  timeout: 30000, // 30 segundos timeout
 });
 
-// Interceptor para incluir el token en todas las solicitudes
+// Interceptor de solicitudes MEJORADO
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
     
-    // Asegurar que los headers siempre estén presentes
-    config.headers = config.headers || {};
-    config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
-    
+    // Configuración dinámica de headers
+    config.headers = {
+      ...config.headers,
+      'Accept': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : undefined,
+      // No establecemos Content-Type por defecto para permitir FormData
+    };
+
+    // Elimina headers undefined
+    Object.keys(config.headers).forEach(key => {
+      if (config.headers[key] === undefined) {
+        delete config.headers[key];
+      }
+    });
+
     return config;
   },
   (error) => {
@@ -27,18 +33,24 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para manejar errores globalmente
+// Interceptor de respuestas MEJORADO
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response) {
-      switch (error.response.status) {
-        case 405:
-          console.error('Método no permitido - Verifica la ruta y el método HTTP');
-          break;
-        // Puedes agregar más casos según necesites
+    // Manejo detallado de errores CORS
+    if (error.code === 'ERR_NETWORK' || error.message.includes('CORS')) {
+      console.error('🚨 Error CORS detectado:', {
+        message: error.message,
+        config: error.config,
+        response: error.response
+      });
+      
+      // Mensaje amigable para el usuario
+      if (typeof window !== 'undefined') {
+        alert('Error de conexión con el servidor. Por favor verifica:\n1. Que el servidor esté en línea\n2. Que tengas conexión a internet\n3. Si el problema persiste, contacta al administrador');
       }
     }
+
     return Promise.reject(error);
   }
 );
