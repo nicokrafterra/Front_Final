@@ -1,36 +1,38 @@
 <template>
-	<div class="contpri">
-		<button class="back-button" @click="volver" aria-label="Volver a la página anterior">
-			<img src="../assets/IMG/arrow-left.svg" alt="Volver" />
-		</button>
-		<section class="eventos-section">
-			<div class="section-header">
-				<h1 class="section-title">Lugares Disponibles para Eventos</h1>
-				<p class="section-description">
-					Elige el lugar ideal para realizar tu evento y resérvalo ahora.
-				</p>
-			</div>
+  <div class="contpri">
+    <button class="back-button" @click="volver" aria-label="Volver a la página anterior">
+      <img src="../assets/IMG/arrow-left.svg" alt="Volver" />
+    </button>
+    <section class="eventos-section">
+      <div class="section-header">
+        <h1 class="section-title">Lugares Disponibles para Eventos</h1>
+        <p class="section-description">
+          Elige el lugar ideal para realizar tu evento y resérvalo ahora.
+        </p>
+      </div>
 
-			<div class="eventos-container">
-				<div v-for="evento in Lugares" :key="evento.id" class="evento-card">
-					<div class="evento-info">
-						<h2 class="evento-name">Nombre: {{ evento.nombre }}</h2>
-						<p class="evento-description">Ubicación: {{ evento.descripcion }}</p>
-						<div v-if="evento.disponible">
+      <div class="eventos-container">
+        <div v-for="evento in Lugares" :key="evento.id" class="evento-card">
+          <div class="evento-image-container">
+            <img :src="evento.imagen" :alt="'Imagen de ' + evento.nombre" class="evento-image" />
+          </div>
+          <div class="evento-info">
+            <h2 class="evento-name">{{ evento.nombre }}</h2>
+            <p class="evento-description">Ubicación: {{ evento.descripcion }}</p>
+            <div v-if="evento.disponible">
               <p class="available-info">
                 Quedan {{ evento.cantidad_maxima-evento.cantidad_actual }} disponibles
               </p>
-							<button class="reserve-button" @click="reservar(evento)">Reservar</button>
+              <button class="reserve-button" @click="reservar(evento)">Reservar</button>
             </div>
             <div v-else>
               <p class="unavailable-info">No disponible</p>
             </div>
-						
-					</div>
-				</div>
-			</div>
-		</section>
-	</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup>
@@ -44,12 +46,21 @@ import api from '@/axiosConfig';
 const router = useRouter();
 const Lugares = ref([]);
 
+// Imágenes locales para los eventos
+const eventosImages = [
+  require('@/assets/IMG/evento1.jpg'),
+  require('@/assets/IMG/evento2.jpg'),
+  require('@/assets/IMG/evento3.jpg'),
+  require('@/assets/IMG/evento4.jpg'),
+  // Agrega más imágenes según necesites
+];
+
 // Computed para obtener el usuario decodificando el token JWT
 const usuario = computed(() => {
   const token = localStorage.getItem('token');
   if (token) {
     try {
-      return jwtDecode(token); // Se espera que el token tenga la información del usuario
+      return jwtDecode(token);
     } catch (error) {
       console.error('Error al decodificar el token:', error);
       return null;
@@ -75,7 +86,11 @@ const volver = () => {
 const obtenerLugares = async () => {
   try {
     const response = await api.get("/planes/Evento/tipo");
-    Lugares.value = response.data;
+    // Asignar imágenes a cada evento
+    Lugares.value = response.data.map((evento, index) => ({
+      ...evento,
+      imagen: eventosImages[index % eventosImages.length] // Usa módulo para ciclar imágenes
+    }));
   } catch (error) {
     console.error("Error al obtener los lugares:", error);
     mostrarAlerta('error', 'Error', 'No se pudieron cargar los lugares. Intenta nuevamente más tarde.');
@@ -89,7 +104,7 @@ const reservar = (evento) => {
     return;
   }
 
-  // Guardar el plan seleccionado en localStorage (simulando la acción de Vuex)
+  // Guardar el plan seleccionado en localStorage
   localStorage.setItem("tipoPlan", JSON.stringify(evento));
   router.push("/reservas");
 
@@ -99,12 +114,11 @@ const reservar = (evento) => {
 onMounted(obtenerLugares);
 </script>
 
-
 <style scoped>
 /* Contenedor principal */
 .contpri {
   padding: 20px;
-  background-color: #FFFFFF; /* Fondo blanco */
+  background-color: #FFFFFF;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -132,7 +146,7 @@ onMounted(obtenerLugares);
 
 /* Sección de eventos */
 .eventos-section {
-	background: linear-gradient(135deg, #F5DEB3, #D4A017); /* Beige Arena y Amarillo Mostaza */
+  background: linear-gradient(135deg, #F5DEB3, #D4A017);
   padding: 40px 30px;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -148,7 +162,7 @@ onMounted(obtenerLugares);
 .section-title {
   font-size: 2.8em;
   margin-bottom: 15px;
-  color: #6B8E23; /* Verde Oliva */
+  color: #6B8E23;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -156,7 +170,7 @@ onMounted(obtenerLugares);
 
 .section-description {
   font-size: 1.2em;
-  color: #8B5A2B; /* Marrón Tierra */
+  color: #8B5A2B;
   line-height: 1.5;
 }
 
@@ -169,19 +183,35 @@ onMounted(obtenerLugares);
 
 /* Tarjetas de eventos */
 .evento-card {
-  background: #FFFFFF; /* Fondo blanco */
+  background: #FFFFFF;
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .evento-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.evento-image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.evento-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.evento-card:hover .evento-image {
+  transform: scale(1.05);
 }
 
 .evento-info {
@@ -197,12 +227,12 @@ onMounted(obtenerLugares);
   font-size: 1.8em;
   margin-bottom: 10px;
   font-weight: bold;
-  color: #6B8E23; /* Verde Oliva */
+  color: #6B8E23;
 }
 
 .evento-description {
   font-size: 1.1em;
-  color: #8B5A2B; /* Marrón Tierra */
+  color: #8B5A2B;
   margin-bottom: 20px;
   line-height: 1.6;
 }
@@ -210,20 +240,20 @@ onMounted(obtenerLugares);
 .available-info {
   font-size: 1em;
   font-weight: bold;
-  color: #4CAF50; /* Verde para disponibilidad */
+  color: #4CAF50;
   margin-bottom: 10px;
 }
 
 .unavailable-info {
   font-size: 1em;
   font-weight: bold;
-  color: #C1440E; /* Rojo Terracota para no disponibilidad */
+  color: #C1440E;
 }
 
 /* Botón de reserva */
 .reserve-button {
-  background: linear-gradient(135deg, #6B8E23, #8B5A2B); /* Verde Oliva y Marrón Tierra */
-  color: #FFFFFF; /* Texto blanco */
+  background: linear-gradient(135deg, #6B8E23, #8B5A2B);
+  color: #FFFFFF;
   border: none;
   padding: 12px 20px;
   border-radius: 8px;
@@ -234,7 +264,7 @@ onMounted(obtenerLugares);
 }
 
 .reserve-button:hover {
-  background: linear-gradient(135deg, #8B5A2B, #6B8E23); /* Marrón Tierra y Verde Oliva */
+  background: linear-gradient(135deg, #8B5A2B, #6B8E23);
   transform: translateY(-2px);
 }
 
@@ -254,6 +284,10 @@ onMounted(obtenerLugares);
 
   .reserve-button {
     font-size: 0.9em;
+  }
+  
+  .evento-image-container {
+    height: 150px;
   }
 }
 </style>
