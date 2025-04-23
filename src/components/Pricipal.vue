@@ -250,7 +250,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="content-card-product">
 						<h3>Churrasco</h3>
-						<p class="price">$29.600 <span>$5.30</span></p>
+						<p class="price">$29.600 <span>$25.800</span></p>
 						<router-link class="redirect-button" to="/Platos">Ver Plato</router-link>
 					</div>
 				</div>
@@ -264,7 +264,7 @@ onBeforeUnmount(() => {
 					<div class="content-card-product">
 						<h3>Pechuga gratinada</h3>
 
-						<p class="price">$22.700 <span>$7.30</span></p>
+						<p class="price">$22.700 <span>$20.000</span></p>
 						<router-link class="redirect-button" to="/Platos">Ver Plato</router-link>
 					</div>
 				</div>
