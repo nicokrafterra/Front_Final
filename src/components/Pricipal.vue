@@ -965,6 +965,10 @@ header:hover {
 
 
 
+.icon-p{
+	display: flex;
+}
+
 .A-logo img {
 	height: 100%;
 	width: 100%;
