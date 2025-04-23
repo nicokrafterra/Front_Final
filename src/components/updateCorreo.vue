@@ -151,6 +151,8 @@ onMounted(() => {
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   animation: fadeIn 0.6s ease-out;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 h2 {

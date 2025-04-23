@@ -223,7 +223,7 @@ export default {
   height: 50px;
   padding: 0 15px;
   font-size: 16px;
-  color: var(--texto);
+  color: #fff;
   background-color: var(--fondo);
   border: 2px solid var(--rojo-terracota);
   border-radius: 8px;
