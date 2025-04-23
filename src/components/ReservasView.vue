@@ -340,7 +340,7 @@ tr:hover {
 }
 
 .delete {
-  background-color: var(--danger);
+  background-color: #ef233c;
   color: white;
 }
 
