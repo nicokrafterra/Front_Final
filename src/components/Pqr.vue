@@ -230,7 +230,8 @@ textarea {
 	cursor: pointer;
 	transition: 0.35s;
 	background-color: #D4A017;
-	padding: 15px	;
+	padding: 5px	;
+	border-radius: 6px;
 }
 
 .back-button:hover {
